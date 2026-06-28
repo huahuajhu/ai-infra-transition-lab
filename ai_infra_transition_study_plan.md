@@ -103,18 +103,24 @@ Each folder should have:
 - `diagrams/` with one architecture diagram.
 - A LinkedIn post draft of 150 to 250 words.
 
+## Daily Guides
+
+Some days need more than a link list. When a day has a guide, follow that guide first; it contains the exact reading range, learning objective, quiz, and artifact template for that hour.
+
+- Week 1 Day 1: `daily_guides/week_01_day_01_ai_infra_stack.md`
+
 ## Week 1 - AI Infrastructure Stack and Distributed Systems Spine
 
 Goal: build a concrete technical map of the AI infrastructure stack, then refresh distributed systems vocabulary.
 
 | Day | 60-minute assignment | Concept to learn | Quiz | Build artifact |
 | --- | --- | --- | --- | --- |
-| 1 | Read the CMU 11-868 LLM Systems course overview and Stanford CS336 course overview. Build a stack map with layers: data, training, serving, scheduling, observability, kernels, compiler/runtime, hardware. | AI infrastructure system decomposition. | What is the difference between a model feature, a training system, an inference runtime, and a cluster platform? | `README.md`: "AI infrastructure stack map". |
+| 1 | Follow `daily_guides/week_01_day_01_ai_infra_stack.md`: read the Ultra-Scale Playbook high-level overview and first memory-accounting sections, then skim CS336 assignments/schedule to map the systems topics. | Why AI infrastructure exists: memory, compute, communication, scheduling, and reliability constraints. | Why is large-model training an infrastructure problem, not just a modeling problem? | `notes/week_01/day_01_stack_map.md`: AI infrastructure stack map and bottleneck table. |
 | 2 | Read MIT 6.5840 home page and Lecture 1 from the schedule. | Failure models, replication, consistency, scalability. | Define availability, consistency, fault tolerance, and tail latency in one sentence each. | `notes/distributed-systems-glossary.md`. |
 | 3 | Read MIT 6.5840 MapReduce lecture/paper from the schedule. | Task scheduling, stragglers, retry, data locality. | Why is a straggler different from a failed task? | Sketch a MapReduce-style training data pipeline. |
 | 4 | Read MIT 6.5840 GFS lecture/paper from the schedule. | Metadata master, chunk placement, leases, checkpoint storage. | What metadata must a training checkpoint store to be resumable? | Design `checkpoint_manifest.json`. |
 | 5 | Read MIT 6.5840 Raft lecture/paper from the schedule. | Leader election, log replication, control-plane consensus. | Why is scheduler state harder than stateless API serving? | Draw a scheduler control-plane failure diagram. |
-| 6 | Read the Hugging Face Ultra-Scale Playbook introduction and parallelism overview. | LLM training scale: memory, communication, parallelism, and hardware efficiency. | Why does scaling a model become an infrastructure problem before it becomes only a modeling problem? | Architecture diagram: "large-model training platform". |
+| 6 | Read the Ultra-Scale Playbook sections on data parallelism, tensor parallelism, pipeline parallelism, sequence parallelism, and context parallelism. | How distributed training splits work across devices. | Which parallelism strategy reduces which bottleneck, and what communication does it introduce? | Architecture diagram: "large-model training platform". |
 | 7 | Weekly review. Rewrite your resume headline and top 6 bullets for AI infrastructure. | Career positioning. | Can each bullet prove systems depth, scale, and reliability? | LinkedIn draft: "Why I am moving into AI infrastructure". |
 
 ## Week 2 - GPU/TPU Cluster Scheduling
