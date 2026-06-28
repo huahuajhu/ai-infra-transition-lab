@@ -37,8 +37,11 @@ Primary study sources:
 - Stanford CS149 Fall 2023 schedule: https://cs149.stanford.edu/fall23
 - CMU 11-868 LLM Systems: https://llmsystem.github.io/llmsystem2025spring/
 - Stanford CS336 Language Modeling from Scratch: https://cs336.stanford.edu/spring2025/
+- Stanford CS336 Spring 2025 lecture repo: https://github.com/stanford-cs336/spring2025-lectures
+- Stanford CS336 Lecture 10 inference code: https://github.com/stanford-cs336/spring2025-lectures/blob/main/lecture_10.py
 - Hugging Face Ultra-Scale Playbook: https://nanotron-ultrascale-playbook.static.hf.space/
 - PyTorch FSDP2 tutorial: https://docs.pytorch.org/tutorials/intermediate/FSDP_tutorial.html
+- PyTorch Distributed Checkpoint docs: https://docs.pytorch.org/docs/stable/distributed.checkpoint.html
 - TorchTitan: https://github.com/pytorch/torchtitan
 - SGLang docs: https://docs.sglang.ai/
 - SGLang RadixAttention concept: https://sgl-project-sglang-93.mintlify.app/concepts/radix-attention
@@ -49,7 +52,11 @@ Primary study sources:
 - Kubernetes GPU scheduling: https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/
 - Kubernetes Scheduling Framework: https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/
 - Kubernetes Priority and Preemption: https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/
+- Kubernetes Node-pressure Eviction: https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/
 - Kueue overview: https://kueue.sigs.k8s.io/docs/overview/
+- Kueue ResourceFlavor: https://kueue.sigs.k8s.io/docs/concepts/resource_flavor/
+- Kueue ClusterQueue: https://kueue.sigs.k8s.io/docs/concepts/cluster_queue/
+- Kueue Workload: https://kueue.sigs.k8s.io/docs/concepts/workload/
 - Volcano unified scheduling: https://volcano.sh/docs/keyfeatures/unifiedscheduling/
 - Slurm GRES GPU scheduling: https://slurm.schedmd.com/gres.html
 - Ray resources and scheduling: https://docs.ray.io/en/latest/ray-core/scheduling/resources.html
@@ -68,6 +75,8 @@ Primary study sources:
 - Brendan Gregg USE method: https://www.brendangregg.com/USEmethod/use-linux.html
 - Brendan Gregg Linux performance: https://www.brendangregg.com/linuxperf.html
 - Linux perf wiki: https://perfwiki.github.io/main/
+- OpenTelemetry traces concept: https://opentelemetry.io/docs/concepts/signals/traces/
+- OpenTelemetry metrics concept: https://opentelemetry.io/docs/concepts/signals/metrics/
 - verl docs: https://verl.readthedocs.io/
 - verl GitHub: https://github.com/verl-project/verl
 - OpenRLHF docs: https://openrlhf.readthedocs.io/
@@ -117,7 +126,7 @@ Goal: show you understand how AI workloads get admitted, placed, preempted, and 
 | 1 | Read Kubernetes Device Plugins and GPU Scheduling. | Extended resources, device plugin lifecycle, GPU limits. | Why are GPUs requested through `limits`, not normal CPU-style requests? | Define `Node`, `Device`, `Workload` classes. |
 | 2 | Read Kubernetes Scheduling Framework. | Filter, score, bind, scheduling plugins. | What is the difference between filter and score? | Implement first-fit placement in `01-cluster-scheduler`. |
 | 3 | Read Kubernetes Priority and Preemption. | Priority classes, eviction, starvation risk. | When can preemption make utilization worse? | Add priority and preemption to simulator. |
-| 4 | Read Kueue overview and ClusterQueue concepts. | Quotas, admission control, fair sharing. | Why does AI batch scheduling often need job-level admission? | Add team quota and fair share queues. |
+| 4 | Read Kueue overview plus ClusterQueue and Workload concept docs. | Quotas, admission control, fair sharing. | Why does AI batch scheduling often need job-level admission? | Add team quota and fair share queues. |
 | 5 | Read Volcano unified scheduling and KubeRay Volcano integration. | Gang scheduling for distributed jobs. | Why can partial pod scheduling waste expensive GPUs? | Add gang scheduling and pending reasons. |
 | 6 | Read Slurm GRES and Ray resources. | HPC GPU allocation, custom resources, Ray actor placement. | Compare Slurm GRES, Kubernetes device plugins, and Ray resources. | Add a scheduler comparison table. |
 | 7 | Ship project slice 1. | Cluster/platform artifact quality. | What three metrics convince a platform team your scheduler is useful? | README with utilization plots and one runbook. |
@@ -131,9 +140,9 @@ Goal: build the debugging instincts needed for hardware, OS, networking, and dis
 | 1 | Read Brendan Gregg USE method. | Utilization, saturation, errors. | For GPU, CPU, memory, disk, NIC: what are U/S/E metrics? | Add `observability/use-checklist.md`. |
 | 2 | Read Brendan Gregg Linux performance overview. | Workload characterization and bottleneck thinking. | What changed? What is the latency metric? What is saturation? | Create incident template for failed training jobs. |
 | 3 | Read Linux perf wiki intro. | Sampling profiler, counters, flame graphs. | Why can CPU profiling still matter for GPU workloads? | Profile a Python CPU hot loop and save output. |
-| 4 | Read OpenTelemetry docs from your existing platform knowledge, or review your current OTel code. | Traces, metrics, logs, cardinality. | Which labels are dangerous at AI cluster scale? | Metrics schema for scheduler simulator. |
+| 4 | Read OpenTelemetry traces and metrics concept pages. | Traces, metrics, logs, cardinality. | Which labels are dangerous at AI cluster scale? | Metrics schema for scheduler simulator. |
 | 5 | Read NVIDIA NCCL overview. | Collective communication, topology awareness. | What does all-reduce do during data-parallel training? | Add "network and collective" section to runbook. |
-| 6 | Read Kubernetes node pressure eviction docs from official docs. | Node-level pressure, eviction, reliability. | What happens when disk, memory, or PID pressure occurs? | Add failure injection cases to simulator. |
+| 6 | Read Kubernetes Node-pressure Eviction. | Node-level pressure, eviction, reliability. | What happens when disk, memory, or PID pressure occurs? | Add failure injection cases to simulator. |
 | 7 | Ship project slice 2. | Operational credibility. | Can a reader reproduce one failure and see one metric change? | LinkedIn draft: "How I debug AI cluster failures". |
 
 ## Week 4 - Distributed Training with PyTorch
@@ -145,9 +154,9 @@ Goal: make distributed training memory, communication, checkpointing, and throug
 | 1 | Read PyTorch FSDP2 tutorial through "How FSDP2 works". | DDP versus FSDP, sharding parameters/gradients/optimizer state. | Why does FSDP reduce memory versus DDP? | Create tiny transformer training script. |
 | 2 | Read Hugging Face Ultra-Scale Playbook sections on data parallelism and ZeRO/FSDP. | Parallelism taxonomy and memory accounting. | Where do parameters, gradients, activations, and optimizer state live? | Add memory-estimator notebook. |
 | 3 | Read TorchTitan README. | Native PyTorch large-scale training stack. | What does TorchTitan expose that a platform engineer should understand? | Add TorchTitan architecture notes. |
-| 4 | Run DDP locally using CPU/Gloo or GPU/NCCL if available. | Process groups, ranks, world size. | What do rank, local rank, and world size mean? | Save throughput metrics to CSV. |
+| 4 | Run DDP locally with CPU/Gloo. If the machine has a CUDA GPU, repeat once with GPU/NCCL and compare notes. | Process groups, ranks, world size. | What do rank, local rank, and world size mean? | Save throughput metrics to CSV. |
 | 5 | Add FSDP option or document a CPU-compatible simulation if no GPU. | Shard lifecycle and all-gather timing. | Why can FSDP introduce communication overhead? | CLI flag: `--strategy ddp|fsdp|single`. |
-| 6 | Add checkpoint and resume. Read PyTorch distributed checkpoint docs if needed. | Fault tolerance for long training jobs. | What state must be saved besides model weights? | Kill and resume demo in README. |
+| 6 | Read PyTorch Distributed Checkpoint docs, then add checkpoint and resume. | Fault tolerance for long training jobs. | What state must be saved besides model weights? | Kill and resume demo in README. |
 | 7 | Ship project slice 3. | Training systems proof. | Can someone see tokens/sec, memory estimate, and recovery behavior? | LinkedIn draft: "Small-scale reproduction of large-scale training problems". |
 
 ## Week 5 - LLM Serving, KV Cache, vLLM, and SGLang
@@ -159,7 +168,7 @@ Goal: understand inference performance from the system side, especially KV cache
 | 1 | Read vLLM docs overview and PagedAttention blog. | KV cache as paged memory, fragmentation, batching. | Why is KV cache memory hard to manage? | Implement block allocator skeleton. |
 | 2 | Read SGLang docs overview. | Low-latency/high-throughput serving, runtime design. | What is continuous batching? | Add request simulator with arrival times. |
 | 3 | Read SGLang RadixAttention concept and LMSYS SGLang blog. | Prefix tree cache and reuse. | When does prefix caching help most? | Implement radix prefix lookup and LRU eviction. |
-| 4 | Read CMU LLM Systems inference lecture/material from the 2025 site. | Inference bottlenecks and serving metrics. | Define TTFT, ITL, throughput, and goodput. | Add metrics output for simulated serving. |
+| 4 | Read Stanford CS336 Spring 2025 `lecture_10.py` on inference and skim the generated lecture materials in the CS336 lecture repo. | Inference bottlenecks and serving metrics. | Define TTFT, ITL, throughput, and goodput. | Add metrics output for simulated serving. |
 | 5 | Compare vLLM PagedAttention and SGLang RadixAttention. | Block allocation versus prefix-aware reuse. | Are these competing or complementary ideas? | Write design note with diagrams. |
 | 6 | Optional hands-on: run vLLM or SGLang with a small local model if hardware permits. If not, benchmark simulator only. | Practical serving tradeoffs. | Which bottleneck is compute-bound versus memory-bound? | Save benchmark table. |
 | 7 | Ship project slice 4. | Inference systems artifact. | Can the README explain why agent workloads benefit from prefix caching? | LinkedIn draft: "KV cache as a systems problem". |
@@ -189,7 +198,7 @@ Goal: create honest kernel/performance proof without pretending to be a compiler
 | 3 | Read CUDA Programming Guide performance sections at a high level. | Coalescing, shared memory, occupancy. | What is memory coalescing? | Add benchmark harness with timing utility. |
 | 4 | Implement or adapt a simple CUDA/Triton kernel if hardware supports it. If not, use PyTorch CPU/GPU baselines and write the kernel as documented code. | Kernel correctness and benchmarking. | Why must benchmarks warm up? | Save baseline timings. |
 | 5 | Implement layernorm, softmax, or matmul microbenchmark. | Arithmetic intensity and memory bandwidth. | Which operation is memory-bound, and why? | Plot runtime vs tensor size. |
-| 6 | Use PyTorch profiler or Nsight Systems if available. | Profiling timelines and kernel attribution. | What does profiler overhead change? | Add profiler screenshot or text output. |
+| 6 | Use PyTorch profiler on the benchmark. If Nsight Systems is installed, run one additional Nsight capture and compare timelines. | Profiling timelines and kernel attribution. | What does profiler overhead change? | Add profiler screenshot or text output. |
 | 7 | Ship project slice 6. | Kernel credibility. | Can a reader reproduce the benchmark and understand the bottleneck? | LinkedIn draft: "My first AI kernel benchmark". |
 
 ## Week 8 - Collectives, NCCL, and High-Speed Interconnects
@@ -202,7 +211,7 @@ Goal: bridge training systems and cluster/platform work through communication pr
 | 2 | Read Hugging Face Ultra-Scale Playbook communication sections. | Communication/computation overlap and bottlenecks. | Why does scaling efficiency drop as GPU count grows? | Add scaling-efficiency calculator. |
 | 3 | Implement ring all-reduce simulator in Python. | Latency, bandwidth, chunking. | How many steps does ring all-reduce need for N ranks? | `ring_allreduce_sim.py`. |
 | 4 | Read Slurm GRES again with NCCL mental model. | Scheduling topology-aware workloads. | Why might two 8-GPU jobs perform differently on the same cluster? | Add topology field to scheduler simulator. |
-| 5 | Read Kubernetes/Volcano network topology notes if available through Volcano docs. | Topology-aware placement. | What placement constraints improve all-reduce? | Add topology-aware scoring. |
+| 5 | Read Kubernetes Scheduling Framework scoring extension points and Volcano unified scheduling, then design a topology-aware scoring rule. | Topology-aware placement. | What placement constraints improve all-reduce? | Add topology-aware scoring. |
 | 6 | Write incident: "training throughput dropped 40 percent after reschedule". | Cross-layer debugging. | What data do you gather from app, NCCL, node, scheduler, and network? | Runbook with hypotheses and checks. |
 | 7 | Ship communication milestone. | Kernel, training, and cluster bridge. | Can you explain RDMA/InfiniBand/NVLink/NCCL without hand-waving? | LinkedIn draft: "Collectives are where ML meets infrastructure". |
 
