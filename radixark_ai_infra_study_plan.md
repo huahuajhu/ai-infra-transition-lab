@@ -1,8 +1,10 @@
-# RadixArk AI Infrastructure Study Plan - 1 Hour Daily
+# AI Infrastructure Transition Study Plan - 1 Hour Daily
 
-Purpose: move from a traditional data science / DevOps profile into AI infrastructure roles like RadixArk Cluster/Platform, Training, TPU Systems, and Kernel/Compiler/Communication.
+Purpose: move from a traditional data science / DevOps profile into AI infrastructure work across cluster/platform engineering, distributed training, inference systems, accelerator systems, and performance engineering.
 
-Best-fit order from your resume:
+The RadixArk postings that inspired this plan are reference examples only. Use them to understand what modern AI infrastructure teams care about; do not treat them as the final target company, the only acceptable job family, or daily study material.
+
+Track priority from your resume:
 
 1. Cluster / Platform: closest fit. Your Kubernetes, Kubeflow, AWS, observability, CI/CD, platform, and production AI service experience already maps well.
 2. Training: also close. You already have fine-tuning SDK, benchmarking, agent experiments, RAG, and ML platform work. The missing pieces to make public are distributed training internals, post-training/RL infrastructure, checkpointing, and failure recovery.
@@ -18,12 +20,17 @@ The plan uses 1 hour per day:
 
 ## Source Catalog
 
-Use these as the primary sources. They are university courses, official docs, or widely used project docs/blogs.
+Use university courses, official docs, and widely used project docs/blogs as the primary sources.
+
+Calibration examples to read once before starting, then revisit only when you are packaging your work for applications:
 
 - RadixArk Cluster / Platform job: https://job-boards.greenhouse.io/radixark/jobs/4134836009
 - RadixArk Training job: https://job-boards.greenhouse.io/radixark/jobs/4134907009
 - RadixArk Kernel / Compiler / Communication job: https://job-boards.greenhouse.io/radixark/jobs/4134913009
 - RadixArk TPU Systems job: https://job-boards.greenhouse.io/radixark/jobs/4087890009
+
+Primary study sources:
+
 - MIT 6.5840 Distributed Systems: https://pdos.csail.mit.edu/6.824/
 - MIT 6.5840 Schedule: https://pdos.csail.mit.edu/6.824/schedule.html
 - Stanford CS149 Parallel Computing: https://cs149.stanford.edu/
@@ -87,18 +94,18 @@ Each folder should have:
 - `diagrams/` with one architecture diagram.
 - A LinkedIn post draft of 150 to 250 words.
 
-## Week 1 - Target Story and Distributed Systems Spine
+## Week 1 - AI Infrastructure Stack and Distributed Systems Spine
 
-Goal: turn the career change into a precise AI infrastructure story, then refresh distributed systems vocabulary.
+Goal: build a concrete technical map of the AI infrastructure stack, then refresh distributed systems vocabulary.
 
 | Day | 60-minute assignment | Concept to learn | Quiz | Build artifact |
 | --- | --- | --- | --- | --- |
-| 1 | Read the four Radix job pages and your resume. Make a 4-column skill matrix: Cluster, Training, TPU, Kernel. | Role decomposition and gap mapping. | Which two roles are closest to your resume, and why? Which role needs the most new proof? | `README.md`: "Target role matrix". |
+| 1 | Read the CMU 11-868 LLM Systems course overview and Stanford CS336 course overview. Build a stack map with layers: data, training, serving, scheduling, observability, kernels, compiler/runtime, hardware. | AI infrastructure system decomposition. | What is the difference between a model feature, a training system, an inference runtime, and a cluster platform? | `README.md`: "AI infrastructure stack map". |
 | 2 | Read MIT 6.5840 home page and Lecture 1 from the schedule. | Failure models, replication, consistency, scalability. | Define availability, consistency, fault tolerance, and tail latency in one sentence each. | `notes/distributed-systems-glossary.md`. |
 | 3 | Read MIT 6.5840 MapReduce lecture/paper from the schedule. | Task scheduling, stragglers, retry, data locality. | Why is a straggler different from a failed task? | Sketch a MapReduce-style training data pipeline. |
 | 4 | Read MIT 6.5840 GFS lecture/paper from the schedule. | Metadata master, chunk placement, leases, checkpoint storage. | What metadata must a training checkpoint store to be resumable? | Design `checkpoint_manifest.json`. |
 | 5 | Read MIT 6.5840 Raft lecture/paper from the schedule. | Leader election, log replication, control-plane consensus. | Why is scheduler state harder than stateless API serving? | Draw a scheduler control-plane failure diagram. |
-| 6 | Read CMU 11-868 LLM Systems course overview. | LLM system stack: data, training, inference, RLHF, hardware. | What is the difference between model code and training infrastructure? | Architecture diagram: "frontier training platform". |
+| 6 | Read the Hugging Face Ultra-Scale Playbook introduction and parallelism overview. | LLM training scale: memory, communication, parallelism, and hardware efficiency. | Why does scaling a model become an infrastructure problem before it becomes only a modeling problem? | Architecture diagram: "large-model training platform". |
 | 7 | Weekly review. Rewrite your resume headline and top 6 bullets for AI infrastructure. | Career positioning. | Can each bullet prove systems depth, scale, and reliability? | LinkedIn draft: "Why I am moving into AI infrastructure". |
 
 ## Week 2 - GPU/TPU Cluster Scheduling
@@ -117,7 +124,7 @@ Goal: show you understand how AI workloads get admitted, placed, preempted, and 
 
 ## Week 3 - Linux, Networking, and Observability
 
-Goal: build the debugging instincts Radix expects for hardware, OS, networking, and distributed services.
+Goal: build the debugging instincts needed for hardware, OS, networking, and distributed AI services.
 
 | Day | 60-minute assignment | Concept to learn | Quiz | Build artifact |
 | --- | --- | --- | --- | --- |
@@ -159,7 +166,7 @@ Goal: understand inference performance from the system side, especially KV cache
 
 ## Week 6 - Post-Training and Agentic RL Infrastructure
 
-Goal: connect your agent background to Radix Training requirements around post-training, async rollouts, sandboxing, and reliability.
+Goal: connect your agent background to modern post-training infrastructure: async rollouts, sandboxing, reward execution, observability, and reliability.
 
 | Day | 60-minute assignment | Concept to learn | Quiz | Build artifact |
 | --- | --- | --- | --- | --- |
@@ -197,7 +204,7 @@ Goal: bridge training systems and cluster/platform work through communication pr
 | 4 | Read Slurm GRES again with NCCL mental model. | Scheduling topology-aware workloads. | Why might two 8-GPU jobs perform differently on the same cluster? | Add topology field to scheduler simulator. |
 | 5 | Read Kubernetes/Volcano network topology notes if available through Volcano docs. | Topology-aware placement. | What placement constraints improve all-reduce? | Add topology-aware scoring. |
 | 6 | Write incident: "training throughput dropped 40 percent after reschedule". | Cross-layer debugging. | What data do you gather from app, NCCL, node, scheduler, and network? | Runbook with hypotheses and checks. |
-| 7 | Ship communication milestone. | Radix Kernel/Training/Cluster bridge. | Can you explain RDMA/InfiniBand/NVLink/NCCL without hand-waving? | LinkedIn draft: "Collectives are where ML meets infrastructure". |
+| 7 | Ship communication milestone. | Kernel, training, and cluster bridge. | Can you explain RDMA/InfiniBand/NVLink/NCCL without hand-waving? | LinkedIn draft: "Collectives are where ML meets infrastructure". |
 
 ## Week 9 - JAX, XLA, StableHLO, and Pallas
 
@@ -219,13 +226,13 @@ Goal: make Cluster/Platform work feel like production resource management, not j
 
 | Day | 60-minute assignment | Concept to learn | Quiz | Build artifact |
 | --- | --- | --- | --- | --- |
-| 1 | Re-read Radix Cluster responsibilities. | Utilization, reliability, capacity planning. | What is the difference between allocation and utilization? | Capacity planning spreadsheet or CSV model. |
+| 1 | Read Kueue resource flavor and ClusterQueue docs, then define a capacity model for a mixed GPU/TPU cluster. | Utilization, reliability, capacity planning. | What is the difference between allocation, reservation, and utilization? | Capacity planning spreadsheet or CSV model. |
 | 2 | Read Kueue workload and ClusterQueue concepts. | Admission, quota, local queue, cluster queue. | Why should queued jobs not create pods immediately? | Add admission decision logs. |
 | 3 | Read Ray scheduling resources and KubeRay GPU guide. | Application-level scheduling and GPU actors. | When would you use Ray placement instead of only Kubernetes scheduling? | Add Ray-style actor workload type. |
 | 4 | Read Volcano unified scheduling. | Queue, gang, fair share, topology. | What problem does gang scheduling solve that priority does not? | Add gang fairness test cases. |
 | 5 | Build a synthetic workload trace: training jobs, inference pods, RL rollout jobs. | Mixed workload economics. | Which workload is preemptible? Which has SLO? | Generate utilization chart. |
 | 6 | Write "preempt training for inference" policy and failure modes. | Reliability and product tradeoffs. | How can preemption hurt checkpoint cost? | Policy doc plus simulator comparison. |
-| 7 | Ship cluster platform capstone. | Cluster/Platform application proof. | Does README map directly to Radix Cluster job bullets? | LinkedIn draft: "AI cluster scheduling under mixed workloads". |
+| 7 | Ship cluster platform capstone. | Cluster/platform application proof. | Does the README make the scheduling tradeoffs clear to a platform engineer who has never met you? | LinkedIn draft: "AI cluster scheduling under mixed workloads". |
 
 ## Week 11 - Reliability, Fault Recovery, and Long-Running Jobs
 
@@ -357,7 +364,7 @@ Required features:
 - JAXPR and HLO/StableHLO dump where possible.
 - Notes on HLO ops, fusion, sharding, and SPMD partitioning.
 - TPU notes: what was tested locally and what would need TPU access.
-- README mapping this to Radix TPU Systems requirements.
+- README mapping this to TPU/JAX/XLA systems expectations.
 
 LinkedIn angle: "I traced a tiny JAX/Pallas program from Python-level code down toward compiler IR to understand TPU systems work."
 
@@ -369,7 +376,7 @@ At the end of each week, update the top of your GitHub README with:
 - Artifact shipped:
 - Production implication:
 - Open question:
-- Radix role mapped:
+- AI infra track mapped:
 
 Use this wording style in public:
 
