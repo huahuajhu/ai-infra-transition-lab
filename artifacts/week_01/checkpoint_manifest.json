@@ -1,0 +1,62 @@
+{
+  "schema_version": "0.1",
+  "checkpoint_id": "run-YYYYMMDD-step-000000",
+  "created_at": "YYYY-MM-DDTHH:MM:SSZ",
+  "training": {
+    "run_id": "run-id",
+    "global_step": 0,
+    "epoch": 0,
+    "micro_batch_size": 0,
+    "gradient_accumulation_steps": 0,
+    "tokens_seen": 0
+  },
+  "distributed": {
+    "strategy": "single|ddp|fsdp|zero",
+    "world_size": 1,
+    "global_ranks": [0],
+    "local_world_size": 1,
+    "node_count": 1
+  },
+  "model_shards": [
+    {
+      "rank": 0,
+      "path": "model/rank_000.pt",
+      "shape_or_partition": "full-or-shard-description",
+      "checksum_sha256": "TODO",
+      "bytes": 0
+    }
+  ],
+  "optimizer_shards": [
+    {
+      "rank": 0,
+      "path": "optimizer/rank_000.pt",
+      "checksum_sha256": "TODO",
+      "bytes": 0
+    }
+  ],
+  "scheduler_state": {
+    "path": "scheduler.pt",
+    "checksum_sha256": "TODO"
+  },
+  "rng_state": {
+    "python": "TODO",
+    "numpy": "TODO",
+    "torch_cpu": "TODO",
+    "torch_cuda_per_rank": {
+      "0": "TODO"
+    }
+  },
+  "dataloader_state": {
+    "dataset_version": "TODO",
+    "sample_index": 0,
+    "epoch_position": 0,
+    "shuffle_seed": 0,
+    "consumed_shards": []
+  },
+  "integrity": {
+    "manifest_checksum_sha256": "TODO",
+    "all_files_committed": false,
+    "complete_marker": "_SUCCESS"
+  },
+  "notes": "Design artifact for Week 1 Day 4. Values are placeholders until Week 4 training reliability work."
+}
