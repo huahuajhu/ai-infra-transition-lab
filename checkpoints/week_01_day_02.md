@@ -2,7 +2,7 @@
 
 ## Status
 
-Not started.
+In progress. MIT 6.5840 home page and Lecture 1 skim completed; Google Research tail-latency reading and checkpoint answers still pending.
 
 ## Sources
 
