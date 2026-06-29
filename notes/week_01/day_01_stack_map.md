@@ -79,7 +79,7 @@ gradient accumulation -> simulates large batch size without fitting it all in me
 
 ## Checkpoint Questions
 
-Status: source-grounded questions 1-5 completed with high confidence. See `checkpoints/week_01_day_01.md`.
+Status: source-grounded questions 1-5 completed with high confidence. Synthesis questions 6-10 completed as first-pass answers from the CS336 field map and stack map. See `checkpoints/week_01_day_01.md`.
 
 ### A. Source-grounded questions from "First Steps: Training on One GPU"
 
@@ -109,10 +109,20 @@ These are not answered by "First Steps: Training on One GPU" alone. They are fir
 
 6. What is the difference between a training runtime and a cluster scheduler?
 
+   A training runtime owns what happens inside the training job: the forward pass, backward pass, optimizer step, distributed communication, memory strategy, checkpoint writing, and resume logic. A cluster scheduler owns where and when the job runs: GPU/node allocation, placement, quotas, priority, preemption, and gang scheduling. In short, the scheduler gives the job resources; the training runtime uses those resources correctly and efficiently.
+
 7. What is the difference between an inference runtime and a model API?
+
+   A model API is the user-facing service contract: HTTP/gRPC endpoint, request schema, authentication, routing, model selection, streaming response shape, and application logic. An inference runtime is the engine behind that API that actually runs generation efficiently: batching requests, managing the KV cache, scheduling prefill/decode work, using tensor parallelism, controlling GPU memory, and optimizing latency/throughput. The API answers "how does a caller ask for a response?" The runtime answers "how do we produce tokens efficiently on accelerators?"
 
 8. Why does communication overhead keep accelerators idle?
 
+   In distributed training or serving, each accelerator often has only part of the work or part of the model state. Devices must exchange tensors through collectives such as all-reduce, all-gather, reduce-scatter, or pipeline sends/receives. If one GPU finishes compute and then waits for data from another GPU or another node, its compute units sit idle. This is why adding more GPUs does not automatically make training faster: scaling only helps when communication is small enough, well placed on the topology, or overlapped with useful compute.
+
 9. Which layer of the stack would own checkpoint/restart after a worker failure?
 
+   This is cross-layer, but the training runtime owns the correctness of checkpoint and restart. It must save and reload model parameters, optimizer state, scheduler state, RNG state, dataloader position, and distributed shard metadata. The cluster scheduler owns restarting or rescheduling the failed worker/job onto resources. Observability/reliability owns detection, alerts, dashboards, and runbooks. First-pass mental model: training runtime owns the state; scheduler owns replacement resources; reliability tooling owns visibility and response.
+
 10. Which two stack layers are closest to your current experience?
+
+   The closest two are cluster scheduler and observability/reliability. Your DevOps/platform background maps directly to Kubernetes, Kubeflow, Docker, Helm, ArgoCD, AWS infrastructure, CI/CD, production operations, monitoring, logging, and runbooks. The next closest layers are inference runtime and data pipeline because of your production LLM/RAG/API work and traditional data science/data engineering experience. The biggest stretch layers are kernel/performance, compiler/runtime, and hardware/network.
