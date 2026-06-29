@@ -77,27 +77,33 @@ gradient accumulation -> simulates large batch size without fitting it all in me
 | Scheduling/resource allocation | Fragmented GPUs, partial placement of distributed jobs, quota conflicts, missing gang scheduling, preemption without checkpoint awareness, or mixed training/inference workloads | Jobs pending despite free GPUs, low cluster utilization, unfair queueing, failed distributed launches, wasted work after preemption | Is the job waiting because of quota, device type, topology, gang requirements, priority, or lack of contiguous resources? |
 | Reliability/fault recovery | Worker/node failure, OOM, flaky storage, checkpoint corruption, retry storms, bad rollout sandbox behavior, or missing health signals | Long-running jobs restart from scratch, lost work, repeated failures, silent metric gaps, slow incident diagnosis | What failed, what state was durable, how much work was lost, and can the job resume safely from the last checkpoint? |
 
-## Quiz Answers
+## Checkpoint Questions
 
-1. During training, what four major tensor categories consume memory?
+### A. Source-grounded questions from "First Steps: Training on One GPU"
 
-   Parameters/weights, gradients, optimizer states, and activations.
+1. Where is batch size represented in the forward/backward training picture?
 
-2. Why can a model fit for the first forward/backward step but fail later?
+   Batch size is not drawn explicitly. It is hidden inside the forward/backward arrows as the number of examples processed together.
 
-   Peak memory changes across the full training step. Activations are needed during forward/backward, gradients accumulate during backward, and optimizer state can add another large memory requirement around the optimizer step.
+2. What is activation recomputation, in plain English?
 
-3. Why do long sequence lengths make activation memory painful?
+   Save only checkpoint activations, discard intermediate activations, and rerun parts of the forward pass during backward so gradients can still be computed.
 
-   Activations are stored for many tensors across layers and tokens. Larger batch size and longer sequence length increase the amount of intermediate state needed for backward.
+3. What is the difference between full and selective activation recomputation?
 
-4. What does activation recomputation trade away to save memory?
+   Full recomputation reruns whole chunks or blocks. Selective recomputation keeps some activations and recomputes only the parts that are expensive in memory.
 
-   It saves activation memory by spending extra compute and time. Instead of storing every intermediate activation, training keeps selected checkpoint activations and reruns parts of forward during backward.
+4. If full recomputation discards intermediate activations, what does it still keep?
 
-5. Name the three high-level scaling challenges from the Ultra-Scale Playbook.
+   It keeps boundary checkpoints, such as the input to a block, and recreates internal activations later.
 
-   Memory usage, compute efficiency, and communication overhead.
+5. What is gradient accumulation, and why does it help when a large batch does not fit in memory?
+
+   Split a large batch into smaller micro-batches, run forward/backward repeatedly, accumulate gradients, then do one optimizer step.
+
+### B. Synthesis questions from the stack map
+
+These are not answered by "First Steps: Training on One GPU" alone. They are first-pass synthesis questions from the CS336 field map and the stack map. It is fine to revise them later.
 
 6. What is the difference between a training runtime and a cluster scheduler?
 

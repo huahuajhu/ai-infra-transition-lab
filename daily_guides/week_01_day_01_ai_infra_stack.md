@@ -107,20 +107,29 @@ Then add this second table:
 | Reliability/fault recovery |  |  |  |
 ```
 
-### 50-60 minutes - Quiz
+### 50-60 minutes - Checkpoint questions
 
-Answer without looking back first. Then check your answer against the source.
+Do not treat all questions as coming from "First Steps: Training on One GPU." They do not.
 
-1. During training, what four major tensor categories consume memory?
-2. Why can a model fit for the first forward/backward step but fail later?
-3. Why do long sequence lengths make activation memory painful?
-4. What does activation recomputation trade away to save memory?
-5. Name the three high-level scaling challenges from the Ultra-Scale Playbook.
+Answer the first group from the Ultra-Scale reading you just did. Answer the second group only after you finish the CS336 field map and stack map.
+
+#### A. Source-grounded questions from "First Steps: Training on One GPU"
+
+1. Where is batch size represented in the forward/backward training picture?
+2. What is activation recomputation, in plain English?
+3. What is the difference between full and selective activation recomputation?
+4. If full recomputation discards intermediate activations, what does it still keep?
+5. What is gradient accumulation, and why does it help when a large batch does not fit in memory?
+
+#### B. Synthesis questions from the stack map, not from the Ultra-Scale section alone
+
 6. What is the difference between a training runtime and a cluster scheduler?
 7. What is the difference between an inference runtime and a model API?
 8. Why does communication overhead keep accelerators idle?
 9. Which layer of the stack would own checkpoint/restart after a worker failure?
 10. Which two stack layers are closest to your current experience?
+
+It is completely fine if questions 6-10 feel less grounded right now. They are there to force a first-pass map of the field. You will revise them after Week 2, Week 4, Week 5, and Week 8.
 
 ## Expected Output
 
@@ -129,7 +138,7 @@ By the end of the hour, you should have:
 - `notes/week_01/day_01_stack_map.md`
 - A filled AI infrastructure stack map
 - A filled bottleneck table
-- Answers to the 10 quiz questions
+- Answers to the source-grounded questions, plus rough first-pass answers or TODOs for the synthesis questions
 
 This is a good Day 1 if you can explain this sentence in your own words:
 
