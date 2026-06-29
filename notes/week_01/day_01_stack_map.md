@@ -79,6 +79,8 @@ gradient accumulation -> simulates large batch size without fitting it all in me
 
 ## Checkpoint Questions
 
+Status: source-grounded questions 1-5 completed with high confidence. See `checkpoints/week_01_day_01.md`.
+
 ### A. Source-grounded questions from "First Steps: Training on One GPU"
 
 1. Where is batch size represented in the forward/backward training picture?
