@@ -133,6 +133,7 @@ Some days need more than a link list. When a day has a guide, follow that guide 
 
 - Week 1 Day 1: `daily_guides/week_01_day_01_ai_infra_stack.md`
 - Week 1 Day 2: `daily_guides/week_01_day_02_distributed_systems_spine.md`
+- Week 1 Day 3: `daily_guides/week_01_day_03_mapreduce_training_pipeline.md`
 - SGLang six-month open-source lane: `open_source/sglang_contribution_track.md`
 - JAX Scaling Book reading map: `reading_maps/jax_scaling_book.md`
 
@@ -159,7 +160,7 @@ Goal: build a concrete technical map of the AI infrastructure stack, then refres
 | --- | --- | --- | --- | --- |
 | 1 | Follow `daily_guides/week_01_day_01_ai_infra_stack.md`: read the Ultra-Scale Playbook high-level overview and first memory-accounting sections, then skim CS336 assignments/schedule to map the systems topics. | Why AI infrastructure exists: memory, compute, communication, scheduling, and reliability constraints. | Source-grounded + synthesis: Why is large-model training an infrastructure problem, not just a modeling problem? | `notes/week_01/day_01_stack_map.md`: AI infrastructure stack map and bottleneck table. |
 | 2 | Follow `daily_guides/week_01_day_02_distributed_systems_spine.md`: read MIT 6.5840 home page and Lecture 1, then read Google Research "The Tail at Scale" summary for tail latency. | Failure models, replication, consistency, scalability, and tail latency. | Source-grounded + synthesis: define distributed system, availability, consistency, fault tolerance, scalability, and tail latency, then map them to AI infrastructure. | `notes/distributed-systems-glossary.md`. |
-| 3 | Read MIT 6.5840 MapReduce lecture/paper from the schedule. | Task scheduling, stragglers, retry, data locality. | Source-grounded: Why is a straggler different from a failed task? | Sketch a MapReduce-style training data pipeline. |
+| 3 | Follow `daily_guides/week_01_day_03_mapreduce_training_pipeline.md`: read MIT 6.5840 Lab 1 context and the MapReduce paper sections on programming model, execution overview, fault tolerance, locality, task granularity, and backup tasks. | Task scheduling, stragglers, retry, data locality. | Source-grounded + artifact-grounded: Why is a straggler different from a failed task, and how does that map to AI data pipeline reliability? | `notes/week_01/day_03_mapreduce_training_pipeline.md`: MapReduce concept map and AI training data pipeline sketch. |
 | 4 | Read MIT 6.5840 GFS lecture/paper from the schedule. | Metadata master, chunk placement, leases, checkpoint storage. | Source-grounded: What metadata must a training checkpoint store to be resumable? | Design `checkpoint_manifest.json`. |
 | 5 | Read MIT 6.5840 Raft lecture/paper from the schedule. | Leader election, log replication, control-plane consensus. | Source-grounded: Why is scheduler state harder than stateless API serving? | Draw a scheduler control-plane failure diagram. |
 | 6 | Read the Ultra-Scale Playbook sections on data parallelism, tensor parallelism, pipeline parallelism, sequence parallelism, and context parallelism. Then read the JAX Scaling Book sharding chapter intro as a second explanation of the same idea. | How distributed training splits work across devices. | Source-grounded: Which parallelism strategy reduces which bottleneck, and what communication does it introduce? | Architecture diagram: "large-model training platform". |
