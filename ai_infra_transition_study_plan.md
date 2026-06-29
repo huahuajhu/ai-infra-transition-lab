@@ -84,7 +84,18 @@ Primary study sources:
 - OpenXLA XLA overview: https://openxla.org/xla
 - OpenXLA GPU architecture: https://openxla.org/xla/gpu_architecture
 - OpenXLA StableHLO spec: https://openxla.org/stablehlo/spec
-- JAX scaling book: https://jax-ml.github.io/scaling-book/
+- JAX Scaling Book main: https://jax-ml.github.io/scaling-book/
+- JAX Scaling Book roofline: https://jax-ml.github.io/scaling-book/roofline/
+- JAX Scaling Book TPUs: https://jax-ml.github.io/scaling-book/tpus/
+- JAX Scaling Book GPUs: https://jax-ml.github.io/scaling-book/gpus/
+- JAX Scaling Book sharding: https://jax-ml.github.io/scaling-book/sharding/
+- JAX Scaling Book transformers: https://jax-ml.github.io/scaling-book/transformers/
+- JAX Scaling Book training: https://jax-ml.github.io/scaling-book/training/
+- JAX Scaling Book applied training: https://jax-ml.github.io/scaling-book/applied-training/
+- JAX Scaling Book inference: https://jax-ml.github.io/scaling-book/inference/
+- JAX Scaling Book applied inference: https://jax-ml.github.io/scaling-book/applied-inference/
+- JAX Scaling Book profiling: https://jax-ml.github.io/scaling-book/profiling/
+- JAX Scaling Book JAX chapter: https://jax-ml.github.io/scaling-book/jax-stuff/
 - Brendan Gregg USE method: https://www.brendangregg.com/USEmethod/use-linux.html
 - Brendan Gregg Linux performance: https://www.brendangregg.com/linuxperf.html
 - Linux perf wiki: https://perfwiki.github.io/main/
@@ -122,6 +133,7 @@ Some days need more than a link list. When a day has a guide, follow that guide 
 
 - Week 1 Day 1: `daily_guides/week_01_day_01_ai_infra_stack.md`
 - SGLang six-month open-source lane: `open_source/sglang_contribution_track.md`
+- JAX Scaling Book reading map: `reading_maps/jax_scaling_book.md`
 
 ## Checkpoint Rules
 
@@ -149,7 +161,7 @@ Goal: build a concrete technical map of the AI infrastructure stack, then refres
 | 3 | Read MIT 6.5840 MapReduce lecture/paper from the schedule. | Task scheduling, stragglers, retry, data locality. | Source-grounded: Why is a straggler different from a failed task? | Sketch a MapReduce-style training data pipeline. |
 | 4 | Read MIT 6.5840 GFS lecture/paper from the schedule. | Metadata master, chunk placement, leases, checkpoint storage. | Source-grounded: What metadata must a training checkpoint store to be resumable? | Design `checkpoint_manifest.json`. |
 | 5 | Read MIT 6.5840 Raft lecture/paper from the schedule. | Leader election, log replication, control-plane consensus. | Source-grounded: Why is scheduler state harder than stateless API serving? | Draw a scheduler control-plane failure diagram. |
-| 6 | Read the Ultra-Scale Playbook sections on data parallelism, tensor parallelism, pipeline parallelism, sequence parallelism, and context parallelism. | How distributed training splits work across devices. | Source-grounded: Which parallelism strategy reduces which bottleneck, and what communication does it introduce? | Architecture diagram: "large-model training platform". |
+| 6 | Read the Ultra-Scale Playbook sections on data parallelism, tensor parallelism, pipeline parallelism, sequence parallelism, and context parallelism. Then read the JAX Scaling Book sharding chapter intro as a second explanation of the same idea. | How distributed training splits work across devices. | Source-grounded: Which parallelism strategy reduces which bottleneck, and what communication does it introduce? | Architecture diagram: "large-model training platform". |
 | 7 | Weekly review. Rewrite your resume headline and top 6 bullets for AI infrastructure. | Career positioning. | Synthesis: Can each bullet prove systems depth, scale, and reliability? | LinkedIn draft: "Why I am moving into AI infrastructure". |
 
 ## Week 2 - GPU/TPU Cluster Scheduling
@@ -187,7 +199,7 @@ Goal: make distributed training memory, communication, checkpointing, and throug
 | Day | 60-minute assignment | Concept to learn | Checkpoint | Build artifact |
 | --- | --- | --- | --- | --- |
 | 1 | Read PyTorch FSDP2 tutorial through "How FSDP2 works". | DDP versus FSDP, sharding parameters/gradients/optimizer state. | Source-grounded: Why does FSDP reduce memory versus DDP? | Create tiny transformer training script. |
-| 2 | Read Hugging Face Ultra-Scale Playbook sections on data parallelism and ZeRO/FSDP. | Parallelism taxonomy and memory accounting. | Source-grounded: Where do parameters, gradients, activations, and optimizer state live? | Add memory-estimator notebook. |
+| 2 | Read Hugging Face Ultra-Scale Playbook sections on data parallelism and ZeRO/FSDP. Then read JAX Scaling Book transformers and training chapter sections on model state, activation memory, and scaling tradeoffs. | Parallelism taxonomy and memory accounting. | Source-grounded: Where do parameters, gradients, activations, and optimizer state live, and which parts scale with batch size or sequence length? | Add memory-estimator notebook. |
 | 3 | Read TorchTitan README. | Native PyTorch large-scale training stack. | Source-grounded: What does TorchTitan expose that a platform engineer should understand? | Add TorchTitan architecture notes. |
 | 4 | Run DDP locally with CPU/Gloo. If the machine has a CUDA GPU, repeat once with GPU/NCCL and compare notes. | Process groups, ranks, world size. | Artifact-grounded: What do rank, local rank, and world size mean? | Save throughput metrics to CSV. |
 | 5 | Add FSDP option or document a CPU-compatible simulation if no GPU. | Shard lifecycle and all-gather timing. | Artifact-grounded: Why can FSDP introduce communication overhead? | CLI flag: `--strategy ddp|fsdp|single`. |
@@ -203,7 +215,7 @@ Goal: understand inference performance from the system side, especially SGLang r
 | 1 | Read SGLang docs overview, developer overview, and contribution guide sections on source install, pre-commit, unit tests, docs, accuracy tests, speed benchmarks, review, CI, code style, and newcomer tips. | SGLang as both runtime and open-source project. | Source-grounded: What does SGLang expect from a useful contributor before review? | `open_source/sglang_repo_map.md`: top-level repo map, test paths, and first subsystem candidates. |
 | 2 | Read SGLang paper/blog and docs overview. | Low-latency/high-throughput serving, runtime design, structured generation. | Source-grounded: What problem does SGLang solve that a plain model API does not? | Add request simulator with arrival times. |
 | 3 | Read SGLang RadixAttention concept and inspect related docs/issues. | Prefix tree cache and reuse. | Source-grounded + synthesis: When does prefix caching help most, and which workloads in your experience match that pattern? | Implement radix prefix lookup and LRU eviction. |
-| 4 | Read Stanford CS336 Spring 2025 `lecture_10.py` on inference and skim the generated lecture materials in the CS336 lecture repo. | Inference bottlenecks and serving metrics. | Source-grounded: Define TTFT, ITL, throughput, and goodput. | Add metrics output for simulated serving. |
+| 4 | Read Stanford CS336 Spring 2025 `lecture_10.py` on inference, then read JAX Scaling Book inference and applied inference intros. | Inference bottlenecks and serving metrics. | Source-grounded: Define TTFT, ITL, throughput, goodput, prefill, decode, and KV cache pressure. | Add metrics output for simulated serving. |
 | 5 | Read vLLM PagedAttention blog as comparison, then compare it to SGLang RadixAttention. | Block allocation versus prefix-aware reuse. | Synthesis: Are these competing or complementary ideas? | Write design note with diagrams. |
 | 6 | SGLang hands-on if hardware permits: run a small local model or run docs/tests/benchmarks that do not require a large GPU. If not, create a reproducible benchmark plan only. | Practical serving tradeoffs and contributor workflow. | Artifact-grounded: What can you reproduce locally, and what requires GPU/cloud access? | Save benchmark table or benchmark plan. |
 | 7 | Ship project slice 4 and pick one SGLang issue or docs/test improvement candidate. | Inference systems artifact plus first contribution target. | Artifact-grounded: Can the README explain why agent workloads benefit from prefix caching and point to one realistic SGLang contribution? | LinkedIn draft: "KV cache as a systems problem"; update `open_source/sglang_contribution_track.md`. |
@@ -228,7 +240,7 @@ Goal: create honest kernel/performance proof without pretending to be a compiler
 
 | Day | 60-minute assignment | Concept to learn | Checkpoint | Build artifact |
 | --- | --- | --- | --- | --- |
-| 1 | Read Stanford CS149 lecture 7 material on GPU architecture/CUDA from Fall 2023. | SIMT, warps, memory hierarchy, occupancy. | Source-grounded: What is a warp? What causes divergence? | `05-kernel-bench/notes/gpu-basics.md`. |
+| 1 | Read Stanford CS149 lecture 7 material on GPU architecture/CUDA from Fall 2023, then read JAX Scaling Book roofline intro and GPU chapter intro. | SIMT, warps, memory hierarchy, occupancy, roofline thinking. | Source-grounded: What is a warp? What causes divergence? What does roofline analysis ask about compute versus memory bandwidth? | `05-kernel-bench/notes/gpu-basics.md`. |
 | 2 | Read NVIDIA CUDA C++ intro. | Host/device, kernel launch, memory copy. | Source-grounded: Why is host-device transfer often a bottleneck? | Vector add or PyTorch extension plan. |
 | 3 | Read CUDA Programming Guide performance sections at a high level. | Coalescing, shared memory, occupancy. | Source-grounded: What is memory coalescing? | Add benchmark harness with timing utility. |
 | 4 | Implement or adapt a simple CUDA/Triton kernel if hardware supports it. If not, use PyTorch CPU/GPU baselines and write the kernel as documented code. | Kernel correctness and benchmarking. | Artifact-grounded: Why must benchmarks warm up? | Save baseline timings. |
@@ -243,7 +255,7 @@ Goal: bridge training systems and cluster/platform work through communication pr
 | Day | 60-minute assignment | Concept to learn | Checkpoint | Build artifact |
 | --- | --- | --- | --- | --- |
 | 1 | Read NVIDIA NCCL overview and "Using NCCL". | All-reduce, broadcast, reduce-scatter, all-gather. | Source-grounded: Which collective appears in DDP? Which appears in FSDP? | Collective glossary. |
-| 2 | Read Hugging Face Ultra-Scale Playbook communication sections. | Communication/computation overlap and bottlenecks. | Source-grounded: Why does scaling efficiency drop as GPU count grows? | Add scaling-efficiency calculator. |
+| 2 | Read Hugging Face Ultra-Scale Playbook communication sections, then read JAX Scaling Book sharding sections on communication and partitioning. | Communication/computation overlap, sharding, and bottlenecks. | Source-grounded: Why does scaling efficiency drop as GPU count grows, and how does sharding introduce communication? | Add scaling-efficiency calculator. |
 | 3 | Implement ring all-reduce simulator in Python. | Latency, bandwidth, chunking. | Artifact-grounded: How many steps does ring all-reduce need for N ranks? | `ring_allreduce_sim.py`. |
 | 4 | Read Slurm GRES again with NCCL mental model. | Scheduling topology-aware workloads. | Source-grounded: Why might two 8-GPU jobs perform differently on the same cluster? | Add topology field to scheduler simulator. |
 | 5 | Read Kubernetes Scheduling Framework scoring extension points and Volcano unified scheduling, then design a topology-aware scoring rule. | Topology-aware placement. | Source-grounded: What placement constraints improve all-reduce? | Add topology-aware scoring. |
@@ -252,17 +264,17 @@ Goal: bridge training systems and cluster/platform work through communication pr
 
 ## Week 9 - JAX, XLA, StableHLO, and Pallas
 
-Goal: create a visible TPU Systems artifact even if you do not have TPU access.
+Goal: use the JAX Scaling Book as the spine for a visible TPU/JAX/XLA artifact, even if you do not have TPU access.
 
 | Day | 60-minute assignment | Concept to learn | Checkpoint | Build artifact |
 | --- | --- | --- | --- | --- |
-| 1 | Read JAX Pallas quickstart. | Block specs, program ids, explicit memory. | Source-grounded: How is Pallas lower-level than normal JAX? | `06-jax-xla-pallas/pallas_vector_add.py`. |
-| 2 | Read JAX Pallas docs overview. | Kernel language mental model. | Source-grounded: What control does Pallas give you that XLA usually hides? | Add annotated kernel comments. |
-| 3 | Read JAX Pallas TPU docs overview. | TPU memory spaces, pipelining, TPU-specific constraints. | Source-grounded: What changes between GPU and TPU kernel thinking? | TPU notes: "what I can test locally vs on TPU". |
-| 4 | Read OpenXLA XLA overview. | ML compiler pipeline and accelerator targets. | Source-grounded: What problem does XLA solve? | Dump and save `jaxpr` and HLO if possible. |
-| 5 | Read OpenXLA StableHLO spec introduction. | Portable HLO operation set. | Source-grounded: Why does StableHLO matter for compiler ecosystems? | Annotate 5 HLO ops from your toy model. |
-| 6 | Read OpenXLA GPU architecture SPMD partitioner section and JAX scaling book intro. | Sharding, SPMD, communication insertion. | Source-grounded: What is the difference between data, tensor, and pipeline parallelism? | Sharding strategy note. |
-| 7 | Ship TPU/JAX milestone. | TPU Systems proof. | Artifact-grounded: Can a reader see Pallas code, compiler artifact, and sharding reasoning? | LinkedIn draft: "Learning JAX/XLA/Pallas from a systems angle". |
+| 1 | Read JAX Scaling Book JAX chapter intro and JAX Pallas quickstart. | JAX mental model plus lower-level kernel control. | Source-grounded: How is Pallas lower-level than normal JAX, and why does JAX expose transformations instead of only eager execution? | `06-jax-xla-pallas/pallas_vector_add.py`. |
+| 2 | Read JAX Scaling Book roofline chapter and JAX Pallas docs overview. | Kernel language mental model and performance ceilings. | Source-grounded: What control does Pallas give you that XLA usually hides, and what does roofline thinking say to measure first? | Add annotated kernel comments and expected bottleneck note. |
+| 3 | Read JAX Scaling Book TPUs chapter and JAX Pallas TPU docs overview. | TPU memory spaces, pipelining, TPU-specific constraints. | Source-grounded: What changes between GPU and TPU kernel thinking? | TPU notes: "what I can test locally vs on TPU". |
+| 4 | Read JAX Scaling Book sharding chapter and OpenXLA XLA overview. | ML compiler pipeline, sharding, and accelerator targets. | Source-grounded: What problem does XLA solve, and why does sharding force communication decisions? | Dump and save `jaxpr` and HLO if possible. |
+| 5 | Read JAX Scaling Book transformers chapter and OpenXLA StableHLO spec introduction. | Transformer computation as compiler/runtime work. | Source-grounded: Why does StableHLO matter for compiler ecosystems, and which transformer operations dominate memory or compute? | Annotate 5 HLO ops from your toy model. |
+| 6 | Read JAX Scaling Book profiling and applied training chapters. | Profiling, SPMD, communication insertion, and training performance debugging. | Source-grounded: What is the difference between data, tensor, and pipeline parallelism, and what would you profile first? | Sharding strategy and profiling note. |
+| 7 | Ship TPU/JAX milestone with the JAX Scaling Book as the main reference. | TPU Systems proof. | Artifact-grounded: Can a reader see Pallas code, compiler artifact, sharding reasoning, and performance/debugging logic? | LinkedIn draft: "Learning JAX/XLA/Pallas from a systems angle". |
 
 ## Week 10 - Capacity Planning, Multi-Tenant Scheduling, and Cost
 
