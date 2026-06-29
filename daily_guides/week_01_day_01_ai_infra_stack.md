@@ -44,22 +44,35 @@ Do not try to finish the whole playbook today. Your goal is to understand the fi
 - Recomputation trades more compute for lower memory.
 - Scaling up introduces a three-way tradeoff between memory usage, compute efficiency, and communication overhead.
 
-### 25-35 minutes - Skim the curriculum map
+### 25-35 minutes - Build a CS336 field map
 
-Read the Stanford CS336 page only enough to inspect the assignments and schedule:
+Do not read CS336 deeply today. Use it as an index of what serious language-model systems work includes.
 
 - Stanford CS336: https://cs336.stanford.edu/spring2025/
 
-Focus on:
+Your task is to map each CS336 topic to one layer of your AI infrastructure stack. Open the page, inspect the assignments and schedule, and fill the table below in `notes/week_01/day_01_stack_map.md`.
 
-- Assignment 2: Systems
-- Lecture 5: GPUs
-- Lecture 6: Kernels, Triton
-- Lectures 7 and 8: Parallelism
-- Lecture 10: Inference
-- Lectures 15 to 17: Alignment and RL
+```markdown
+## CS336 Field Map
 
-This is not the main reading. Use it as a map of the field. The point is to see that serious language-model engineering includes implementation, profiling, distributed training, GPU kernels, inference, and RL/post-training.
+| CS336 item | What it is really about | AI infra layer | Why I should care |
+| --- | --- | --- | --- |
+| Assignment 2: Systems | Profile/benchmark model layers, implement FlashAttention2 in Triton, build memory-efficient distributed training | Kernel/performance + training runtime | This is the bridge from "I can train a model" to "I can make training efficient." |
+| Lecture 5: GPUs | GPU architecture and performance model | Hardware/network + kernel/performance | GPU memory hierarchy and utilization explain why training is expensive. |
+| Lecture 6: Kernels, Triton | Custom GPU kernels | Kernel/performance | Kernels are where high-level model math becomes hardware-efficient code. |
+| Lectures 7-8: Parallelism | Split training across devices | Training runtime + communication | Parallelism is how models exceed one GPU, but it introduces communication cost. |
+| Lecture 10: Inference | Serving trained models | Inference runtime | Inference has different bottlenecks: KV cache, batching, latency, throughput. |
+| Lectures 15-17: Alignment/RL | SFT/RLHF/RL post-training | Post-training infrastructure | Post-training needs rollout workers, rewards, sandboxes, queues, and observability. |
+| Assignment 4: Data | Convert raw web data into usable pretraining data | Data pipeline | Model quality and training throughput depend on data pipeline quality. |
+```
+
+What you are learning from this section:
+
+- The course is not just "LLM theory"; it is implementation-heavy systems work.
+- Modern AI infrastructure spans data, training runtime, kernels, GPUs, inference, and post-training.
+- Your plan is organized around the same stack, but at a 1-hour/day pace.
+
+If you only have 5 minutes, fill the `Why I should care` column for Assignment 2, Lectures 7-8, and Lecture 10.
 
 ### 35-50 minutes - Build the artifact
 

@@ -42,6 +42,18 @@ activation recomputation -> saves activation memory by spending extra compute
 gradient accumulation -> simulates large batch size without fitting it all in memory at once
 ```
 
+## CS336 Field Map
+
+| CS336 item | What it is really about | AI infra layer | Why I should care |
+| --- | --- | --- | --- |
+| Assignment 2: Systems | Profile/benchmark model layers, implement FlashAttention2 in Triton, build memory-efficient distributed training | Kernel/performance + training runtime | This is the bridge from "I can train a model" to "I can make training efficient." |
+| Lecture 5: GPUs | GPU architecture and performance model | Hardware/network + kernel/performance | GPU memory hierarchy and utilization explain why training is expensive. |
+| Lecture 6: Kernels, Triton | Custom GPU kernels | Kernel/performance | Kernels are where high-level model math becomes hardware-efficient code. |
+| Lectures 7-8: Parallelism | Split training across devices | Training runtime + communication | Parallelism is how models exceed one GPU, but it introduces communication cost. |
+| Lecture 10: Inference | Serving trained models | Inference runtime | Inference has different bottlenecks: KV cache, batching, latency, throughput. |
+| Lectures 15-17: Alignment/RL | SFT/RLHF/RL post-training | Post-training infrastructure | Post-training needs rollout workers, rewards, sandboxes, queues, and observability. |
+| Assignment 4: Data | Convert raw web data into usable pretraining data | Data pipeline | Model quality and training throughput depend on data pipeline quality. |
+
 ## AI Infrastructure Stack Map
 
 | Layer | What it owns | Typical bottleneck | Example tools/projects | What I already know | What I need to learn |
