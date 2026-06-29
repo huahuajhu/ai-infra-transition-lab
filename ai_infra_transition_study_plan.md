@@ -11,12 +11,20 @@ Track priority from your resume:
 3. TPU Systems: stretch but reachable as a portfolio lane. You need a visible JAX/XLA/Pallas artifact.
 4. Kernel / Compiler / Communication: deepest gap. Treat this as a 6 to 12 month specialization track. The 12-week plan below creates credible proof, but not mastery.
 
+Primary open-source target: SGLang. Treat vLLM as an important comparison source, but make SGLang the repo where you build repeated contribution history. The six-month goal is to become a trusted recurring contributor with multiple merged PRs, useful issue triage, reproducible benchmarks, and subsystem familiarity. Official maintainer status is possible but not fully under your control, so do not use it as the only success metric.
+
 The plan uses 1 hour per day:
 
 - 10 minutes: source-grounded recall from yesterday, written in `checkpoints/week-N.md`.
 - 25 minutes: read or watch the exact assigned material.
 - 20 minutes: implement, profile, draw, or document one small artifact.
 - 5 minutes: commit notes, update README, or draft one LinkedIn sentence.
+
+Add a SGLang open-source lane without increasing daily study time:
+
+- Daily minimum: spend 10 minutes reading one SGLang issue, PR, source file, test, or docs page.
+- Weekly minimum: reserve one full 60-minute session for SGLang contribution work.
+- Rule: do not wait until Week 12 to engage. Week 12 is for packaging and outreach, not first contact with the repo.
 
 ## Source Catalog
 
@@ -43,7 +51,12 @@ Primary study sources:
 - PyTorch FSDP2 tutorial: https://docs.pytorch.org/tutorials/intermediate/FSDP_tutorial.html
 - PyTorch Distributed Checkpoint docs: https://docs.pytorch.org/docs/stable/distributed.checkpoint.html
 - TorchTitan: https://github.com/pytorch/torchtitan
-- SGLang docs: https://docs.sglang.ai/
+- SGLang GitHub: https://github.com/sgl-project/sglang
+- SGLang docs: https://docs.sglang.io/
+- SGLang contribution guide: https://docs.sglang.io/docs/developer_guide/contribution_guide
+- SGLang developer overview: https://docs.sglang.io/docs/developer_guide/overview
+- SGLang benchmark and profiling guide: https://docs.sglang.io/docs/developer_guide/benchmark_and_profiling
+- SGLang serving benchmark guide: https://docs.sglang.io/docs/developer_guide/bench_serving
 - SGLang RadixAttention concept: https://sgl-project-sglang-93.mintlify.app/concepts/radix-attention
 - SGLang paper/blog: https://www.lmsys.org/blog/2024-01-17-sglang/
 - vLLM docs: https://docs.vllm.ai/
@@ -108,6 +121,7 @@ Each folder should have:
 Some days need more than a link list. When a day has a guide, follow that guide first; it contains the exact reading range, learning objective, checkpoint questions, and artifact template for that hour.
 
 - Week 1 Day 1: `daily_guides/week_01_day_01_ai_infra_stack.md`
+- SGLang six-month open-source lane: `open_source/sglang_contribution_track.md`
 
 ## Checkpoint Rules
 
@@ -180,19 +194,19 @@ Goal: make distributed training memory, communication, checkpointing, and throug
 | 6 | Read PyTorch Distributed Checkpoint docs, then add checkpoint and resume. | Fault tolerance for long training jobs. | Source-grounded: What state must be saved besides model weights? | Kill and resume demo in README. |
 | 7 | Ship project slice 3. | Training systems proof. | Artifact-grounded: Can someone see tokens/sec, memory estimate, and recovery behavior? | LinkedIn draft: "Small-scale reproduction of large-scale training problems". |
 
-## Week 5 - LLM Serving, KV Cache, vLLM, and SGLang
+## Week 5 - SGLang-First LLM Serving, KV Cache, and vLLM Comparison
 
-Goal: understand inference performance from the system side, especially KV cache, batching, and prefix reuse.
+Goal: understand inference performance from the system side, especially SGLang runtime design, KV cache behavior, batching, prefix reuse, and where vLLM provides useful comparison.
 
 | Day | 60-minute assignment | Concept to learn | Checkpoint | Build artifact |
 | --- | --- | --- | --- | --- |
-| 1 | Read vLLM docs overview and PagedAttention blog. | KV cache as paged memory, fragmentation, batching. | Source-grounded: Why is KV cache memory hard to manage? | Implement block allocator skeleton. |
-| 2 | Read SGLang docs overview. | Low-latency/high-throughput serving, runtime design. | Source-grounded: What is continuous batching? | Add request simulator with arrival times. |
-| 3 | Read SGLang RadixAttention concept and LMSYS SGLang blog. | Prefix tree cache and reuse. | Source-grounded: When does prefix caching help most? | Implement radix prefix lookup and LRU eviction. |
+| 1 | Read SGLang docs overview, developer overview, and contribution guide sections on source install, pre-commit, unit tests, docs, accuracy tests, speed benchmarks, review, CI, code style, and newcomer tips. | SGLang as both runtime and open-source project. | Source-grounded: What does SGLang expect from a useful contributor before review? | `open_source/sglang_repo_map.md`: top-level repo map, test paths, and first subsystem candidates. |
+| 2 | Read SGLang paper/blog and docs overview. | Low-latency/high-throughput serving, runtime design, structured generation. | Source-grounded: What problem does SGLang solve that a plain model API does not? | Add request simulator with arrival times. |
+| 3 | Read SGLang RadixAttention concept and inspect related docs/issues. | Prefix tree cache and reuse. | Source-grounded + synthesis: When does prefix caching help most, and which workloads in your experience match that pattern? | Implement radix prefix lookup and LRU eviction. |
 | 4 | Read Stanford CS336 Spring 2025 `lecture_10.py` on inference and skim the generated lecture materials in the CS336 lecture repo. | Inference bottlenecks and serving metrics. | Source-grounded: Define TTFT, ITL, throughput, and goodput. | Add metrics output for simulated serving. |
-| 5 | Compare vLLM PagedAttention and SGLang RadixAttention. | Block allocation versus prefix-aware reuse. | Synthesis: Are these competing or complementary ideas? | Write design note with diagrams. |
-| 6 | Optional hands-on: run vLLM or SGLang with a small local model if hardware permits. If not, benchmark simulator only. | Practical serving tradeoffs. | Artifact-grounded: Which bottleneck is compute-bound versus memory-bound? | Save benchmark table. |
-| 7 | Ship project slice 4. | Inference systems artifact. | Artifact-grounded: Can the README explain why agent workloads benefit from prefix caching? | LinkedIn draft: "KV cache as a systems problem". |
+| 5 | Read vLLM PagedAttention blog as comparison, then compare it to SGLang RadixAttention. | Block allocation versus prefix-aware reuse. | Synthesis: Are these competing or complementary ideas? | Write design note with diagrams. |
+| 6 | SGLang hands-on if hardware permits: run a small local model or run docs/tests/benchmarks that do not require a large GPU. If not, create a reproducible benchmark plan only. | Practical serving tradeoffs and contributor workflow. | Artifact-grounded: What can you reproduce locally, and what requires GPU/cloud access? | Save benchmark table or benchmark plan. |
+| 7 | Ship project slice 4 and pick one SGLang issue or docs/test improvement candidate. | Inference systems artifact plus first contribution target. | Artifact-grounded: Can the README explain why agent workloads benefit from prefix caching and point to one realistic SGLang contribution? | LinkedIn draft: "KV cache as a systems problem"; update `open_source/sglang_contribution_track.md`. |
 
 ## Week 6 - Post-Training and Agentic RL Infrastructure
 
@@ -280,12 +294,12 @@ Goal: demonstrate that you can keep expensive jobs alive and explain failure rec
 
 ## Week 12 - Open Source, Interview Story, and Public Launch
 
-Goal: convert study into evidence: GitHub, LinkedIn, resume bullets, and interview narratives.
+Goal: convert study into evidence: GitHub, LinkedIn, resume bullets, SGLang contribution proof, and interview narratives.
 
 | Day | 60-minute assignment | Concept to learn | Checkpoint | Build artifact |
 | --- | --- | --- | --- | --- |
-| 1 | Pick one target open-source project: SGLang, vLLM, TorchTitan, verl, Kueue, Volcano, Ray, or JAX. Read contribution guide and two open issues. | Open-source contribution strategy. | Synthesis: What issue is small, reproducible, and useful? | `open_source_targets.md`. |
-| 2 | Make one docs improvement, repro script, benchmark issue, or small PR locally. | Maintainer empathy. | Artifact-grounded: What evidence would make this issue easy to triage? | Draft issue/PR text. |
+| 1 | Revisit the SGLang contribution guide, your Week 5 repo map, and five recent SGLang issues/PRs in your chosen subsystem. | Open-source contribution strategy. | Synthesis: What issue is small, reproducible, useful, and aligned with maintainer priorities? | `open_source/sglang_issue_shortlist.md`. |
+| 2 | Make one SGLang docs improvement, test improvement, repro script, benchmark issue, or small PR locally. | Maintainer empathy. | Artifact-grounded: What evidence would make this issue easy to triage? | Draft SGLang issue/PR text. |
 | 3 | Revise resume summary and top 8 bullets toward AI infrastructure. | Narrative compression. | Synthesis: Does each bullet show scale, system, and outcome? | `resume_ai_infra_bullets.md`. |
 | 4 | Prepare interview stories: cluster outage, training failure, inference bottleneck, open-source contribution. | STAR stories for systems roles. | Synthesis: What was the constraint, tradeoff, and measurable result? | `interview_story_bank.md`. |
 | 5 | Polish repos: README, architecture diagrams, benchmark tables, reproducible commands. | Portfolio polish. | Artifact-grounded: Can a reviewer understand the artifact in 90 seconds? | Repo cleanup checklist. |
@@ -432,6 +446,11 @@ Training application package:
 
 - Lead with `02-training-reliability`, `04-post-training-rollouts`, and `03-kv-cache-serving`.
 - Resume keywords: FSDP/DDP, TorchTitan, checkpoint/resume, fault recovery, post-training rollouts, reward harness, SGLang/vLLM, distributed observability.
+
+SGLang contributor application package:
+
+- Lead with `03-kv-cache-serving`, `04-post-training-rollouts`, SGLang issue/PR history, and benchmark/repro artifacts.
+- Resume keywords: SGLang, LLM serving, RadixAttention, KV cache, continuous batching, structured generation, TTFT, ITL, throughput, goodput, reproducible benchmark, open-source contribution.
 
 TPU Systems application package:
 
