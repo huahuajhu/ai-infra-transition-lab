@@ -13,7 +13,7 @@ Track priority from your resume:
 
 The plan uses 1 hour per day:
 
-- 10 minutes: recall quiz from yesterday, written in `quizzes/week-N.md`.
+- 10 minutes: source-grounded recall from yesterday, written in `checkpoints/week-N.md`.
 - 25 minutes: read or watch the exact assigned material.
 - 20 minutes: implement, profile, draw, or document one small artifact.
 - 5 minutes: commit notes, update README, or draft one LinkedIn sentence.
@@ -98,191 +98,212 @@ Create one GitHub organization-level portfolio repo or six small repos. A single
 Each folder should have:
 
 - `README.md` with problem, source material, design, results, and what you would do at 1000+ GPU scale.
-- `notes.md` with the daily quiz answers.
+- `notes.md` with the daily checkpoint answers.
 - `benchmarks/` with CSV or JSON outputs.
 - `diagrams/` with one architecture diagram.
 - A LinkedIn post draft of 150 to 250 words.
 
 ## Daily Guides
 
-Some days need more than a link list. When a day has a guide, follow that guide first; it contains the exact reading range, learning objective, quiz, and artifact template for that hour.
+Some days need more than a link list. When a day has a guide, follow that guide first; it contains the exact reading range, learning objective, checkpoint questions, and artifact template for that hour.
 
 - Week 1 Day 1: `daily_guides/week_01_day_01_ai_infra_stack.md`
+
+## Checkpoint Rules
+
+Every future lesson should separate what the source directly teaches from what the artifact or broader study plan asks you to infer. This avoids the Day 1 problem where a question felt like it should come from one reading but actually required broader synthesis.
+
+Use these tags in every daily guide and checkpoint file:
+
+- `Source-grounded`: answer only from the assigned reading/video/doc section.
+- `Artifact-grounded`: answer from the code, table, diagram, benchmark, or note you built that day.
+- `Synthesis`: a first-pass connection across multiple layers of the AI infrastructure stack. It is okay to mark this as `TODO` or low confidence.
+- `Prior experience`: answer from your production background, then revise after later lessons.
+
+If a question cannot be answered from the assigned source, label it `Synthesis` or `Prior experience`; do not pretend the source covered it.
+
+The weekly tables now tag each checkpoint prompt with the expected evidence source, such as `Source-grounded`, `Artifact-grounded`, or `Synthesis`.
 
 ## Week 1 - AI Infrastructure Stack and Distributed Systems Spine
 
 Goal: build a concrete technical map of the AI infrastructure stack, then refresh distributed systems vocabulary.
 
-| Day | 60-minute assignment | Concept to learn | Quiz | Build artifact |
+| Day | 60-minute assignment | Concept to learn | Checkpoint | Build artifact |
 | --- | --- | --- | --- | --- |
-| 1 | Follow `daily_guides/week_01_day_01_ai_infra_stack.md`: read the Ultra-Scale Playbook high-level overview and first memory-accounting sections, then skim CS336 assignments/schedule to map the systems topics. | Why AI infrastructure exists: memory, compute, communication, scheduling, and reliability constraints. | Why is large-model training an infrastructure problem, not just a modeling problem? | `notes/week_01/day_01_stack_map.md`: AI infrastructure stack map and bottleneck table. |
-| 2 | Read MIT 6.5840 home page and Lecture 1 from the schedule. | Failure models, replication, consistency, scalability. | Define availability, consistency, fault tolerance, and tail latency in one sentence each. | `notes/distributed-systems-glossary.md`. |
-| 3 | Read MIT 6.5840 MapReduce lecture/paper from the schedule. | Task scheduling, stragglers, retry, data locality. | Why is a straggler different from a failed task? | Sketch a MapReduce-style training data pipeline. |
-| 4 | Read MIT 6.5840 GFS lecture/paper from the schedule. | Metadata master, chunk placement, leases, checkpoint storage. | What metadata must a training checkpoint store to be resumable? | Design `checkpoint_manifest.json`. |
-| 5 | Read MIT 6.5840 Raft lecture/paper from the schedule. | Leader election, log replication, control-plane consensus. | Why is scheduler state harder than stateless API serving? | Draw a scheduler control-plane failure diagram. |
-| 6 | Read the Ultra-Scale Playbook sections on data parallelism, tensor parallelism, pipeline parallelism, sequence parallelism, and context parallelism. | How distributed training splits work across devices. | Which parallelism strategy reduces which bottleneck, and what communication does it introduce? | Architecture diagram: "large-model training platform". |
-| 7 | Weekly review. Rewrite your resume headline and top 6 bullets for AI infrastructure. | Career positioning. | Can each bullet prove systems depth, scale, and reliability? | LinkedIn draft: "Why I am moving into AI infrastructure". |
+| 1 | Follow `daily_guides/week_01_day_01_ai_infra_stack.md`: read the Ultra-Scale Playbook high-level overview and first memory-accounting sections, then skim CS336 assignments/schedule to map the systems topics. | Why AI infrastructure exists: memory, compute, communication, scheduling, and reliability constraints. | Source-grounded + synthesis: Why is large-model training an infrastructure problem, not just a modeling problem? | `notes/week_01/day_01_stack_map.md`: AI infrastructure stack map and bottleneck table. |
+| 2 | Read MIT 6.5840 home page and Lecture 1 from the schedule. | Failure models, replication, consistency, scalability. | Source-grounded: Define availability, consistency, fault tolerance, and tail latency in one sentence each. | `notes/distributed-systems-glossary.md`. |
+| 3 | Read MIT 6.5840 MapReduce lecture/paper from the schedule. | Task scheduling, stragglers, retry, data locality. | Source-grounded: Why is a straggler different from a failed task? | Sketch a MapReduce-style training data pipeline. |
+| 4 | Read MIT 6.5840 GFS lecture/paper from the schedule. | Metadata master, chunk placement, leases, checkpoint storage. | Source-grounded: What metadata must a training checkpoint store to be resumable? | Design `checkpoint_manifest.json`. |
+| 5 | Read MIT 6.5840 Raft lecture/paper from the schedule. | Leader election, log replication, control-plane consensus. | Source-grounded: Why is scheduler state harder than stateless API serving? | Draw a scheduler control-plane failure diagram. |
+| 6 | Read the Ultra-Scale Playbook sections on data parallelism, tensor parallelism, pipeline parallelism, sequence parallelism, and context parallelism. | How distributed training splits work across devices. | Source-grounded: Which parallelism strategy reduces which bottleneck, and what communication does it introduce? | Architecture diagram: "large-model training platform". |
+| 7 | Weekly review. Rewrite your resume headline and top 6 bullets for AI infrastructure. | Career positioning. | Synthesis: Can each bullet prove systems depth, scale, and reliability? | LinkedIn draft: "Why I am moving into AI infrastructure". |
 
 ## Week 2 - GPU/TPU Cluster Scheduling
 
 Goal: show you understand how AI workloads get admitted, placed, preempted, and observed.
 
-| Day | 60-minute assignment | Concept to learn | Quiz | Build artifact |
+| Day | 60-minute assignment | Concept to learn | Checkpoint | Build artifact |
 | --- | --- | --- | --- | --- |
-| 1 | Read Kubernetes Device Plugins and GPU Scheduling. | Extended resources, device plugin lifecycle, GPU limits. | Why are GPUs requested through `limits`, not normal CPU-style requests? | Define `Node`, `Device`, `Workload` classes. |
-| 2 | Read Kubernetes Scheduling Framework. | Filter, score, bind, scheduling plugins. | What is the difference between filter and score? | Implement first-fit placement in `01-cluster-scheduler`. |
-| 3 | Read Kubernetes Priority and Preemption. | Priority classes, eviction, starvation risk. | When can preemption make utilization worse? | Add priority and preemption to simulator. |
-| 4 | Read Kueue overview plus ClusterQueue and Workload concept docs. | Quotas, admission control, fair sharing. | Why does AI batch scheduling often need job-level admission? | Add team quota and fair share queues. |
-| 5 | Read Volcano unified scheduling and KubeRay Volcano integration. | Gang scheduling for distributed jobs. | Why can partial pod scheduling waste expensive GPUs? | Add gang scheduling and pending reasons. |
-| 6 | Read Slurm GRES and Ray resources. | HPC GPU allocation, custom resources, Ray actor placement. | Compare Slurm GRES, Kubernetes device plugins, and Ray resources. | Add a scheduler comparison table. |
-| 7 | Ship project slice 1. | Cluster/platform artifact quality. | What three metrics convince a platform team your scheduler is useful? | README with utilization plots and one runbook. |
+| 1 | Read Kubernetes Device Plugins and GPU Scheduling. | Extended resources, device plugin lifecycle, GPU limits. | Source-grounded: Why are GPUs requested through `limits`, not normal CPU-style requests? | Define `Node`, `Device`, `Workload` classes. |
+| 2 | Read Kubernetes Scheduling Framework. | Filter, score, bind, scheduling plugins. | Source-grounded: What is the difference between filter and score? | Implement first-fit placement in `01-cluster-scheduler`. |
+| 3 | Read Kubernetes Priority and Preemption. | Priority classes, eviction, starvation risk. | Source-grounded: When can preemption make utilization worse? | Add priority and preemption to simulator. |
+| 4 | Read Kueue overview plus ClusterQueue and Workload concept docs. | Quotas, admission control, fair sharing. | Source-grounded: Why does AI batch scheduling often need job-level admission? | Add team quota and fair share queues. |
+| 5 | Read Volcano unified scheduling and KubeRay Volcano integration. | Gang scheduling for distributed jobs. | Source-grounded: Why can partial pod scheduling waste expensive GPUs? | Add gang scheduling and pending reasons. |
+| 6 | Read Slurm GRES and Ray resources. | HPC GPU allocation, custom resources, Ray actor placement. | Source-grounded: Compare Slurm GRES, Kubernetes device plugins, and Ray resources. | Add a scheduler comparison table. |
+| 7 | Ship project slice 1. | Cluster/platform artifact quality. | Artifact-grounded: What three metrics convince a platform team your scheduler is useful? | README with utilization plots and one runbook. |
 
 ## Week 3 - Linux, Networking, and Observability
 
 Goal: build the debugging instincts needed for hardware, OS, networking, and distributed AI services.
 
-| Day | 60-minute assignment | Concept to learn | Quiz | Build artifact |
+| Day | 60-minute assignment | Concept to learn | Checkpoint | Build artifact |
 | --- | --- | --- | --- | --- |
-| 1 | Read Brendan Gregg USE method. | Utilization, saturation, errors. | For GPU, CPU, memory, disk, NIC: what are U/S/E metrics? | Add `observability/use-checklist.md`. |
-| 2 | Read Brendan Gregg Linux performance overview. | Workload characterization and bottleneck thinking. | What changed? What is the latency metric? What is saturation? | Create incident template for failed training jobs. |
-| 3 | Read Linux perf wiki intro. | Sampling profiler, counters, flame graphs. | Why can CPU profiling still matter for GPU workloads? | Profile a Python CPU hot loop and save output. |
-| 4 | Read OpenTelemetry traces and metrics concept pages. | Traces, metrics, logs, cardinality. | Which labels are dangerous at AI cluster scale? | Metrics schema for scheduler simulator. |
-| 5 | Read NVIDIA NCCL overview. | Collective communication, topology awareness. | What does all-reduce do during data-parallel training? | Add "network and collective" section to runbook. |
-| 6 | Read Kubernetes Node-pressure Eviction. | Node-level pressure, eviction, reliability. | What happens when disk, memory, or PID pressure occurs? | Add failure injection cases to simulator. |
-| 7 | Ship project slice 2. | Operational credibility. | Can a reader reproduce one failure and see one metric change? | LinkedIn draft: "How I debug AI cluster failures". |
+| 1 | Read Brendan Gregg USE method. | Utilization, saturation, errors. | Source-grounded: For GPU, CPU, memory, disk, NIC: what are U/S/E metrics? | Add `observability/use-checklist.md`. |
+| 2 | Read Brendan Gregg Linux performance overview. | Workload characterization and bottleneck thinking. | Source-grounded: What changed? What is the latency metric? What is saturation? | Create incident template for failed training jobs. |
+| 3 | Read Linux perf wiki intro. | Sampling profiler, counters, flame graphs. | Source-grounded: Why can CPU profiling still matter for GPU workloads? | Profile a Python CPU hot loop and save output. |
+| 4 | Read OpenTelemetry traces and metrics concept pages. | Traces, metrics, logs, cardinality. | Source-grounded: Which labels are dangerous at AI cluster scale? | Metrics schema for scheduler simulator. |
+| 5 | Read NVIDIA NCCL overview. | Collective communication, topology awareness. | Source-grounded: What does all-reduce do during data-parallel training? | Add "network and collective" section to runbook. |
+| 6 | Read Kubernetes Node-pressure Eviction. | Node-level pressure, eviction, reliability. | Source-grounded: What happens when disk, memory, or PID pressure occurs? | Add failure injection cases to simulator. |
+| 7 | Ship project slice 2. | Operational credibility. | Artifact-grounded: Can a reader reproduce one failure and see one metric change? | LinkedIn draft: "How I debug AI cluster failures". |
 
 ## Week 4 - Distributed Training with PyTorch
 
 Goal: make distributed training memory, communication, checkpointing, and throughput visible.
 
-| Day | 60-minute assignment | Concept to learn | Quiz | Build artifact |
+| Day | 60-minute assignment | Concept to learn | Checkpoint | Build artifact |
 | --- | --- | --- | --- | --- |
-| 1 | Read PyTorch FSDP2 tutorial through "How FSDP2 works". | DDP versus FSDP, sharding parameters/gradients/optimizer state. | Why does FSDP reduce memory versus DDP? | Create tiny transformer training script. |
-| 2 | Read Hugging Face Ultra-Scale Playbook sections on data parallelism and ZeRO/FSDP. | Parallelism taxonomy and memory accounting. | Where do parameters, gradients, activations, and optimizer state live? | Add memory-estimator notebook. |
-| 3 | Read TorchTitan README. | Native PyTorch large-scale training stack. | What does TorchTitan expose that a platform engineer should understand? | Add TorchTitan architecture notes. |
-| 4 | Run DDP locally with CPU/Gloo. If the machine has a CUDA GPU, repeat once with GPU/NCCL and compare notes. | Process groups, ranks, world size. | What do rank, local rank, and world size mean? | Save throughput metrics to CSV. |
-| 5 | Add FSDP option or document a CPU-compatible simulation if no GPU. | Shard lifecycle and all-gather timing. | Why can FSDP introduce communication overhead? | CLI flag: `--strategy ddp|fsdp|single`. |
-| 6 | Read PyTorch Distributed Checkpoint docs, then add checkpoint and resume. | Fault tolerance for long training jobs. | What state must be saved besides model weights? | Kill and resume demo in README. |
-| 7 | Ship project slice 3. | Training systems proof. | Can someone see tokens/sec, memory estimate, and recovery behavior? | LinkedIn draft: "Small-scale reproduction of large-scale training problems". |
+| 1 | Read PyTorch FSDP2 tutorial through "How FSDP2 works". | DDP versus FSDP, sharding parameters/gradients/optimizer state. | Source-grounded: Why does FSDP reduce memory versus DDP? | Create tiny transformer training script. |
+| 2 | Read Hugging Face Ultra-Scale Playbook sections on data parallelism and ZeRO/FSDP. | Parallelism taxonomy and memory accounting. | Source-grounded: Where do parameters, gradients, activations, and optimizer state live? | Add memory-estimator notebook. |
+| 3 | Read TorchTitan README. | Native PyTorch large-scale training stack. | Source-grounded: What does TorchTitan expose that a platform engineer should understand? | Add TorchTitan architecture notes. |
+| 4 | Run DDP locally with CPU/Gloo. If the machine has a CUDA GPU, repeat once with GPU/NCCL and compare notes. | Process groups, ranks, world size. | Artifact-grounded: What do rank, local rank, and world size mean? | Save throughput metrics to CSV. |
+| 5 | Add FSDP option or document a CPU-compatible simulation if no GPU. | Shard lifecycle and all-gather timing. | Artifact-grounded: Why can FSDP introduce communication overhead? | CLI flag: `--strategy ddp|fsdp|single`. |
+| 6 | Read PyTorch Distributed Checkpoint docs, then add checkpoint and resume. | Fault tolerance for long training jobs. | Source-grounded: What state must be saved besides model weights? | Kill and resume demo in README. |
+| 7 | Ship project slice 3. | Training systems proof. | Artifact-grounded: Can someone see tokens/sec, memory estimate, and recovery behavior? | LinkedIn draft: "Small-scale reproduction of large-scale training problems". |
 
 ## Week 5 - LLM Serving, KV Cache, vLLM, and SGLang
 
 Goal: understand inference performance from the system side, especially KV cache, batching, and prefix reuse.
 
-| Day | 60-minute assignment | Concept to learn | Quiz | Build artifact |
+| Day | 60-minute assignment | Concept to learn | Checkpoint | Build artifact |
 | --- | --- | --- | --- | --- |
-| 1 | Read vLLM docs overview and PagedAttention blog. | KV cache as paged memory, fragmentation, batching. | Why is KV cache memory hard to manage? | Implement block allocator skeleton. |
-| 2 | Read SGLang docs overview. | Low-latency/high-throughput serving, runtime design. | What is continuous batching? | Add request simulator with arrival times. |
-| 3 | Read SGLang RadixAttention concept and LMSYS SGLang blog. | Prefix tree cache and reuse. | When does prefix caching help most? | Implement radix prefix lookup and LRU eviction. |
-| 4 | Read Stanford CS336 Spring 2025 `lecture_10.py` on inference and skim the generated lecture materials in the CS336 lecture repo. | Inference bottlenecks and serving metrics. | Define TTFT, ITL, throughput, and goodput. | Add metrics output for simulated serving. |
-| 5 | Compare vLLM PagedAttention and SGLang RadixAttention. | Block allocation versus prefix-aware reuse. | Are these competing or complementary ideas? | Write design note with diagrams. |
-| 6 | Optional hands-on: run vLLM or SGLang with a small local model if hardware permits. If not, benchmark simulator only. | Practical serving tradeoffs. | Which bottleneck is compute-bound versus memory-bound? | Save benchmark table. |
-| 7 | Ship project slice 4. | Inference systems artifact. | Can the README explain why agent workloads benefit from prefix caching? | LinkedIn draft: "KV cache as a systems problem". |
+| 1 | Read vLLM docs overview and PagedAttention blog. | KV cache as paged memory, fragmentation, batching. | Source-grounded: Why is KV cache memory hard to manage? | Implement block allocator skeleton. |
+| 2 | Read SGLang docs overview. | Low-latency/high-throughput serving, runtime design. | Source-grounded: What is continuous batching? | Add request simulator with arrival times. |
+| 3 | Read SGLang RadixAttention concept and LMSYS SGLang blog. | Prefix tree cache and reuse. | Source-grounded: When does prefix caching help most? | Implement radix prefix lookup and LRU eviction. |
+| 4 | Read Stanford CS336 Spring 2025 `lecture_10.py` on inference and skim the generated lecture materials in the CS336 lecture repo. | Inference bottlenecks and serving metrics. | Source-grounded: Define TTFT, ITL, throughput, and goodput. | Add metrics output for simulated serving. |
+| 5 | Compare vLLM PagedAttention and SGLang RadixAttention. | Block allocation versus prefix-aware reuse. | Synthesis: Are these competing or complementary ideas? | Write design note with diagrams. |
+| 6 | Optional hands-on: run vLLM or SGLang with a small local model if hardware permits. If not, benchmark simulator only. | Practical serving tradeoffs. | Artifact-grounded: Which bottleneck is compute-bound versus memory-bound? | Save benchmark table. |
+| 7 | Ship project slice 4. | Inference systems artifact. | Artifact-grounded: Can the README explain why agent workloads benefit from prefix caching? | LinkedIn draft: "KV cache as a systems problem". |
 
 ## Week 6 - Post-Training and Agentic RL Infrastructure
 
 Goal: connect your agent background to modern post-training infrastructure: async rollouts, sandboxing, reward execution, observability, and reliability.
 
-| Day | 60-minute assignment | Concept to learn | Quiz | Build artifact |
+| Day | 60-minute assignment | Concept to learn | Checkpoint | Build artifact |
 | --- | --- | --- | --- | --- |
-| 1 | Read Hugging Face TRL overview and DPO trainer docs. | SFT, DPO, reward modeling, preference optimization. | How is DPO different from PPO-style RLHF? | Minimal DPO data schema. |
-| 2 | Read TRL GRPO trainer docs. | GRPO and reasoning/post-training workflows. | Why can GRPO avoid a separate value model? | Reward function interface. |
-| 3 | Read verl docs overview. | Production-ready RL post-training framework. | What pieces exist in an RL post-training pipeline? | Draw actor, rollout, reward, trainer diagram. |
-| 4 | Read OpenRLHF docs overview. | Ray + vLLM + DeepSpeed architecture. | Why is generation often the RLHF bottleneck? | Async rollout queue skeleton. |
-| 5 | Implement a tiny reward harness for math or code-format tasks. | Sandboxed rewards and determinism. | What makes a reward function exploitable? | `reward.py` plus unit tests. |
-| 6 | Add metrics: rollout latency, reward pass rate, retry count, queue depth. | Observability for post-training jobs. | Which metric tells you rollout is starving training? | Dashboard JSON or simple plots. |
-| 7 | Ship project slice 5. | Training-role proof. | Can a reviewer see you understand agentic post-training infra? | LinkedIn draft: "Agentic post-training is a distributed systems problem". |
+| 1 | Read Hugging Face TRL overview and DPO trainer docs. | SFT, DPO, reward modeling, preference optimization. | Source-grounded: How is DPO different from PPO-style RLHF? | Minimal DPO data schema. |
+| 2 | Read TRL GRPO trainer docs. | GRPO and reasoning/post-training workflows. | Source-grounded: Why can GRPO avoid a separate value model? | Reward function interface. |
+| 3 | Read verl docs overview. | Production-ready RL post-training framework. | Source-grounded: What pieces exist in an RL post-training pipeline? | Draw actor, rollout, reward, trainer diagram. |
+| 4 | Read OpenRLHF docs overview. | Ray + vLLM + DeepSpeed architecture. | Source-grounded: Why is generation often the RLHF bottleneck? | Async rollout queue skeleton. |
+| 5 | Implement a tiny reward harness for math or code-format tasks. | Sandboxed rewards and determinism. | Artifact-grounded: What makes a reward function exploitable? | `reward.py` plus unit tests. |
+| 6 | Add metrics: rollout latency, reward pass rate, retry count, queue depth. | Observability for post-training jobs. | Artifact-grounded: Which metric tells you rollout is starving training? | Dashboard JSON or simple plots. |
+| 7 | Ship project slice 5. | Training-role proof. | Artifact-grounded: Can a reviewer see you understand agentic post-training infra? | LinkedIn draft: "Agentic post-training is a distributed systems problem". |
 
 ## Week 7 - CUDA, Triton, and Performance Basics
 
 Goal: create honest kernel/performance proof without pretending to be a compiler engineer yet.
 
-| Day | 60-minute assignment | Concept to learn | Quiz | Build artifact |
+| Day | 60-minute assignment | Concept to learn | Checkpoint | Build artifact |
 | --- | --- | --- | --- | --- |
-| 1 | Read Stanford CS149 lecture 7 material on GPU architecture/CUDA from Fall 2023. | SIMT, warps, memory hierarchy, occupancy. | What is a warp? What causes divergence? | `05-kernel-bench/notes/gpu-basics.md`. |
-| 2 | Read NVIDIA CUDA C++ intro. | Host/device, kernel launch, memory copy. | Why is host-device transfer often a bottleneck? | Vector add or PyTorch extension plan. |
-| 3 | Read CUDA Programming Guide performance sections at a high level. | Coalescing, shared memory, occupancy. | What is memory coalescing? | Add benchmark harness with timing utility. |
-| 4 | Implement or adapt a simple CUDA/Triton kernel if hardware supports it. If not, use PyTorch CPU/GPU baselines and write the kernel as documented code. | Kernel correctness and benchmarking. | Why must benchmarks warm up? | Save baseline timings. |
-| 5 | Implement layernorm, softmax, or matmul microbenchmark. | Arithmetic intensity and memory bandwidth. | Which operation is memory-bound, and why? | Plot runtime vs tensor size. |
-| 6 | Use PyTorch profiler on the benchmark. If Nsight Systems is installed, run one additional Nsight capture and compare timelines. | Profiling timelines and kernel attribution. | What does profiler overhead change? | Add profiler screenshot or text output. |
-| 7 | Ship project slice 6. | Kernel credibility. | Can a reader reproduce the benchmark and understand the bottleneck? | LinkedIn draft: "My first AI kernel benchmark". |
+| 1 | Read Stanford CS149 lecture 7 material on GPU architecture/CUDA from Fall 2023. | SIMT, warps, memory hierarchy, occupancy. | Source-grounded: What is a warp? What causes divergence? | `05-kernel-bench/notes/gpu-basics.md`. |
+| 2 | Read NVIDIA CUDA C++ intro. | Host/device, kernel launch, memory copy. | Source-grounded: Why is host-device transfer often a bottleneck? | Vector add or PyTorch extension plan. |
+| 3 | Read CUDA Programming Guide performance sections at a high level. | Coalescing, shared memory, occupancy. | Source-grounded: What is memory coalescing? | Add benchmark harness with timing utility. |
+| 4 | Implement or adapt a simple CUDA/Triton kernel if hardware supports it. If not, use PyTorch CPU/GPU baselines and write the kernel as documented code. | Kernel correctness and benchmarking. | Artifact-grounded: Why must benchmarks warm up? | Save baseline timings. |
+| 5 | Implement layernorm, softmax, or matmul microbenchmark. | Arithmetic intensity and memory bandwidth. | Artifact-grounded: Which operation is memory-bound, and why? | Plot runtime vs tensor size. |
+| 6 | Use PyTorch profiler on the benchmark. If Nsight Systems is installed, run one additional Nsight capture and compare timelines. | Profiling timelines and kernel attribution. | Artifact-grounded: What does profiler overhead change? | Add profiler screenshot or text output. |
+| 7 | Ship project slice 6. | Kernel credibility. | Artifact-grounded: Can a reader reproduce the benchmark and understand the bottleneck? | LinkedIn draft: "My first AI kernel benchmark". |
 
 ## Week 8 - Collectives, NCCL, and High-Speed Interconnects
 
 Goal: bridge training systems and cluster/platform work through communication primitives.
 
-| Day | 60-minute assignment | Concept to learn | Quiz | Build artifact |
+| Day | 60-minute assignment | Concept to learn | Checkpoint | Build artifact |
 | --- | --- | --- | --- | --- |
-| 1 | Read NVIDIA NCCL overview and "Using NCCL". | All-reduce, broadcast, reduce-scatter, all-gather. | Which collective appears in DDP? Which appears in FSDP? | Collective glossary. |
-| 2 | Read Hugging Face Ultra-Scale Playbook communication sections. | Communication/computation overlap and bottlenecks. | Why does scaling efficiency drop as GPU count grows? | Add scaling-efficiency calculator. |
-| 3 | Implement ring all-reduce simulator in Python. | Latency, bandwidth, chunking. | How many steps does ring all-reduce need for N ranks? | `ring_allreduce_sim.py`. |
-| 4 | Read Slurm GRES again with NCCL mental model. | Scheduling topology-aware workloads. | Why might two 8-GPU jobs perform differently on the same cluster? | Add topology field to scheduler simulator. |
-| 5 | Read Kubernetes Scheduling Framework scoring extension points and Volcano unified scheduling, then design a topology-aware scoring rule. | Topology-aware placement. | What placement constraints improve all-reduce? | Add topology-aware scoring. |
-| 6 | Write incident: "training throughput dropped 40 percent after reschedule". | Cross-layer debugging. | What data do you gather from app, NCCL, node, scheduler, and network? | Runbook with hypotheses and checks. |
-| 7 | Ship communication milestone. | Kernel, training, and cluster bridge. | Can you explain RDMA/InfiniBand/NVLink/NCCL without hand-waving? | LinkedIn draft: "Collectives are where ML meets infrastructure". |
+| 1 | Read NVIDIA NCCL overview and "Using NCCL". | All-reduce, broadcast, reduce-scatter, all-gather. | Source-grounded: Which collective appears in DDP? Which appears in FSDP? | Collective glossary. |
+| 2 | Read Hugging Face Ultra-Scale Playbook communication sections. | Communication/computation overlap and bottlenecks. | Source-grounded: Why does scaling efficiency drop as GPU count grows? | Add scaling-efficiency calculator. |
+| 3 | Implement ring all-reduce simulator in Python. | Latency, bandwidth, chunking. | Artifact-grounded: How many steps does ring all-reduce need for N ranks? | `ring_allreduce_sim.py`. |
+| 4 | Read Slurm GRES again with NCCL mental model. | Scheduling topology-aware workloads. | Source-grounded: Why might two 8-GPU jobs perform differently on the same cluster? | Add topology field to scheduler simulator. |
+| 5 | Read Kubernetes Scheduling Framework scoring extension points and Volcano unified scheduling, then design a topology-aware scoring rule. | Topology-aware placement. | Source-grounded: What placement constraints improve all-reduce? | Add topology-aware scoring. |
+| 6 | Write incident: "training throughput dropped 40 percent after reschedule". | Cross-layer debugging. | Synthesis: What data do you gather from app, NCCL, node, scheduler, and network? | Runbook with hypotheses and checks. |
+| 7 | Ship communication milestone. | Kernel, training, and cluster bridge. | Artifact-grounded: Can you explain RDMA/InfiniBand/NVLink/NCCL without hand-waving? | LinkedIn draft: "Collectives are where ML meets infrastructure". |
 
 ## Week 9 - JAX, XLA, StableHLO, and Pallas
 
 Goal: create a visible TPU Systems artifact even if you do not have TPU access.
 
-| Day | 60-minute assignment | Concept to learn | Quiz | Build artifact |
+| Day | 60-minute assignment | Concept to learn | Checkpoint | Build artifact |
 | --- | --- | --- | --- | --- |
-| 1 | Read JAX Pallas quickstart. | Block specs, program ids, explicit memory. | How is Pallas lower-level than normal JAX? | `06-jax-xla-pallas/pallas_vector_add.py`. |
-| 2 | Read JAX Pallas docs overview. | Kernel language mental model. | What control does Pallas give you that XLA usually hides? | Add annotated kernel comments. |
-| 3 | Read JAX Pallas TPU docs overview. | TPU memory spaces, pipelining, TPU-specific constraints. | What changes between GPU and TPU kernel thinking? | TPU notes: "what I can test locally vs on TPU". |
-| 4 | Read OpenXLA XLA overview. | ML compiler pipeline and accelerator targets. | What problem does XLA solve? | Dump and save `jaxpr` and HLO if possible. |
-| 5 | Read OpenXLA StableHLO spec introduction. | Portable HLO operation set. | Why does StableHLO matter for compiler ecosystems? | Annotate 5 HLO ops from your toy model. |
-| 6 | Read OpenXLA GPU architecture SPMD partitioner section and JAX scaling book intro. | Sharding, SPMD, communication insertion. | What is the difference between data, tensor, and pipeline parallelism? | Sharding strategy note. |
-| 7 | Ship TPU/JAX milestone. | TPU Systems proof. | Can a reader see Pallas code, compiler artifact, and sharding reasoning? | LinkedIn draft: "Learning JAX/XLA/Pallas from a systems angle". |
+| 1 | Read JAX Pallas quickstart. | Block specs, program ids, explicit memory. | Source-grounded: How is Pallas lower-level than normal JAX? | `06-jax-xla-pallas/pallas_vector_add.py`. |
+| 2 | Read JAX Pallas docs overview. | Kernel language mental model. | Source-grounded: What control does Pallas give you that XLA usually hides? | Add annotated kernel comments. |
+| 3 | Read JAX Pallas TPU docs overview. | TPU memory spaces, pipelining, TPU-specific constraints. | Source-grounded: What changes between GPU and TPU kernel thinking? | TPU notes: "what I can test locally vs on TPU". |
+| 4 | Read OpenXLA XLA overview. | ML compiler pipeline and accelerator targets. | Source-grounded: What problem does XLA solve? | Dump and save `jaxpr` and HLO if possible. |
+| 5 | Read OpenXLA StableHLO spec introduction. | Portable HLO operation set. | Source-grounded: Why does StableHLO matter for compiler ecosystems? | Annotate 5 HLO ops from your toy model. |
+| 6 | Read OpenXLA GPU architecture SPMD partitioner section and JAX scaling book intro. | Sharding, SPMD, communication insertion. | Source-grounded: What is the difference between data, tensor, and pipeline parallelism? | Sharding strategy note. |
+| 7 | Ship TPU/JAX milestone. | TPU Systems proof. | Artifact-grounded: Can a reader see Pallas code, compiler artifact, and sharding reasoning? | LinkedIn draft: "Learning JAX/XLA/Pallas from a systems angle". |
 
 ## Week 10 - Capacity Planning, Multi-Tenant Scheduling, and Cost
 
 Goal: make Cluster/Platform work feel like production resource management, not just Kubernetes familiarity.
 
-| Day | 60-minute assignment | Concept to learn | Quiz | Build artifact |
+| Day | 60-minute assignment | Concept to learn | Checkpoint | Build artifact |
 | --- | --- | --- | --- | --- |
-| 1 | Read Kueue resource flavor and ClusterQueue docs, then define a capacity model for a mixed GPU/TPU cluster. | Utilization, reliability, capacity planning. | What is the difference between allocation, reservation, and utilization? | Capacity planning spreadsheet or CSV model. |
-| 2 | Read Kueue workload and ClusterQueue concepts. | Admission, quota, local queue, cluster queue. | Why should queued jobs not create pods immediately? | Add admission decision logs. |
-| 3 | Read Ray scheduling resources and KubeRay GPU guide. | Application-level scheduling and GPU actors. | When would you use Ray placement instead of only Kubernetes scheduling? | Add Ray-style actor workload type. |
-| 4 | Read Volcano unified scheduling. | Queue, gang, fair share, topology. | What problem does gang scheduling solve that priority does not? | Add gang fairness test cases. |
-| 5 | Build a synthetic workload trace: training jobs, inference pods, RL rollout jobs. | Mixed workload economics. | Which workload is preemptible? Which has SLO? | Generate utilization chart. |
-| 6 | Write "preempt training for inference" policy and failure modes. | Reliability and product tradeoffs. | How can preemption hurt checkpoint cost? | Policy doc plus simulator comparison. |
-| 7 | Ship cluster platform capstone. | Cluster/platform application proof. | Does the README make the scheduling tradeoffs clear to a platform engineer who has never met you? | LinkedIn draft: "AI cluster scheduling under mixed workloads". |
+| 1 | Read Kueue resource flavor and ClusterQueue docs, then define a capacity model for a mixed GPU/TPU cluster. | Utilization, reliability, capacity planning. | Source-grounded: What is the difference between allocation, reservation, and utilization? | Capacity planning spreadsheet or CSV model. |
+| 2 | Read Kueue workload and ClusterQueue concepts. | Admission, quota, local queue, cluster queue. | Source-grounded: Why should queued jobs not create pods immediately? | Add admission decision logs. |
+| 3 | Read Ray scheduling resources and KubeRay GPU guide. | Application-level scheduling and GPU actors. | Source-grounded: When would you use Ray placement instead of only Kubernetes scheduling? | Add Ray-style actor workload type. |
+| 4 | Read Volcano unified scheduling. | Queue, gang, fair share, topology. | Source-grounded: What problem does gang scheduling solve that priority does not? | Add gang fairness test cases. |
+| 5 | Build a synthetic workload trace: training jobs, inference pods, RL rollout jobs. | Mixed workload economics. | Artifact-grounded: Which workload is preemptible? Which has SLO? | Generate utilization chart. |
+| 6 | Write "preempt training for inference" policy and failure modes. | Reliability and product tradeoffs. | Synthesis: How can preemption hurt checkpoint cost? | Policy doc plus simulator comparison. |
+| 7 | Ship cluster platform capstone. | Cluster/platform application proof. | Artifact-grounded: Does the README make the scheduling tradeoffs clear to a platform engineer who has never met you? | LinkedIn draft: "AI cluster scheduling under mixed workloads". |
 
 ## Week 11 - Reliability, Fault Recovery, and Long-Running Jobs
 
 Goal: demonstrate that you can keep expensive jobs alive and explain failure recovery clearly.
 
-| Day | 60-minute assignment | Concept to learn | Quiz | Build artifact |
+| Day | 60-minute assignment | Concept to learn | Checkpoint | Build artifact |
 | --- | --- | --- | --- | --- |
-| 1 | Revisit MIT 6.5840 fault-tolerance topics and your Week 4 checkpoint code. | Failure domains and recovery semantics. | What does exactly-once mean for training checkpoints? | Add failure-domain table. |
-| 2 | Add failure injection to training script: kill at step N, resume from latest checkpoint. | Recovery testing. | How do you prove no data duplication or lost steps? | `--fail-at-step` demo. |
-| 3 | Add metric: time to recover, lost work, checkpoint size, checkpoint interval. | Reliability SLOs. | What checkpoint interval minimizes expected lost work? | Recovery results CSV. |
-| 4 | Write incident: "worker OOM during RL rollout generation". | Cross-layer incident response. | Which component owns the failure: model, serving, scheduler, or platform? | Incident report template. |
-| 5 | Add queue retry/backoff policy in rollout harness. | Retry storms and backpressure. | How can retries make outage worse? | Backoff implementation. |
-| 6 | Create final architecture diagram tying scheduler, training, serving, rollouts, observability. | End-to-end AI infra. | Where are the control plane and data plane? | `diagrams/end_to_end_ai_infra.md`. |
-| 7 | Ship reliability milestone. | Training + platform maturity. | Can a hiring manager see production judgment? | LinkedIn draft: "Fault tolerance in long-running AI jobs". |
+| 1 | Revisit MIT 6.5840 fault-tolerance topics and your Week 4 checkpoint code. | Failure domains and recovery semantics. | Source-grounded: What does exactly-once mean for training checkpoints? | Add failure-domain table. |
+| 2 | Add failure injection to training script: kill at step N, resume from latest checkpoint. | Recovery testing. | Artifact-grounded: How do you prove no data duplication or lost steps? | `--fail-at-step` demo. |
+| 3 | Add metric: time to recover, lost work, checkpoint size, checkpoint interval. | Reliability SLOs. | Artifact-grounded: What checkpoint interval minimizes expected lost work? | Recovery results CSV. |
+| 4 | Write incident: "worker OOM during RL rollout generation". | Cross-layer incident response. | Synthesis: Which component owns the failure: model, serving, scheduler, or platform? | Incident report template. |
+| 5 | Add queue retry/backoff policy in rollout harness. | Retry storms and backpressure. | Artifact-grounded: How can retries make outage worse? | Backoff implementation. |
+| 6 | Create final architecture diagram tying scheduler, training, serving, rollouts, observability. | End-to-end AI infra. | Artifact-grounded: Where are the control plane and data plane? | `diagrams/end_to_end_ai_infra.md`. |
+| 7 | Ship reliability milestone. | Training + platform maturity. | Artifact-grounded: Can a hiring manager see production judgment? | LinkedIn draft: "Fault tolerance in long-running AI jobs". |
 
 ## Week 12 - Open Source, Interview Story, and Public Launch
 
 Goal: convert study into evidence: GitHub, LinkedIn, resume bullets, and interview narratives.
 
-| Day | 60-minute assignment | Concept to learn | Quiz | Build artifact |
+| Day | 60-minute assignment | Concept to learn | Checkpoint | Build artifact |
 | --- | --- | --- | --- | --- |
-| 1 | Pick one target open-source project: SGLang, vLLM, TorchTitan, verl, Kueue, Volcano, Ray, or JAX. Read contribution guide and two open issues. | Open-source contribution strategy. | What issue is small, reproducible, and useful? | `open_source_targets.md`. |
-| 2 | Make one docs improvement, repro script, benchmark issue, or small PR locally. | Maintainer empathy. | What evidence would make this issue easy to triage? | Draft issue/PR text. |
-| 3 | Revise resume summary and top 8 bullets toward AI infrastructure. | Narrative compression. | Does each bullet show scale, system, and outcome? | `resume_ai_infra_bullets.md`. |
-| 4 | Prepare interview stories: cluster outage, training failure, inference bottleneck, open-source contribution. | STAR stories for systems roles. | What was the constraint, tradeoff, and measurable result? | `interview_story_bank.md`. |
-| 5 | Polish repos: README, architecture diagrams, benchmark tables, reproducible commands. | Portfolio polish. | Can a reviewer understand the artifact in 90 seconds? | Repo cleanup checklist. |
-| 6 | Publish one LinkedIn post with a diagram and link to the repo. | Public signal. | Does the post teach one thing and avoid sounding like a course certificate? | LinkedIn post 1. |
-| 7 | Apply or reach out to 5 people/projects. | Career conversion. | Which role and artifact are you leading with? | Application tracker with artifact links. |
+| 1 | Pick one target open-source project: SGLang, vLLM, TorchTitan, verl, Kueue, Volcano, Ray, or JAX. Read contribution guide and two open issues. | Open-source contribution strategy. | Synthesis: What issue is small, reproducible, and useful? | `open_source_targets.md`. |
+| 2 | Make one docs improvement, repro script, benchmark issue, or small PR locally. | Maintainer empathy. | Artifact-grounded: What evidence would make this issue easy to triage? | Draft issue/PR text. |
+| 3 | Revise resume summary and top 8 bullets toward AI infrastructure. | Narrative compression. | Synthesis: Does each bullet show scale, system, and outcome? | `resume_ai_infra_bullets.md`. |
+| 4 | Prepare interview stories: cluster outage, training failure, inference bottleneck, open-source contribution. | STAR stories for systems roles. | Synthesis: What was the constraint, tradeoff, and measurable result? | `interview_story_bank.md`. |
+| 5 | Polish repos: README, architecture diagrams, benchmark tables, reproducible commands. | Portfolio polish. | Artifact-grounded: Can a reviewer understand the artifact in 90 seconds? | Repo cleanup checklist. |
+| 6 | Publish one LinkedIn post with a diagram and link to the repo. | Public signal. | Artifact-grounded: Does the post teach one thing and avoid sounding like a course certificate? | LinkedIn post 1. |
+| 7 | Apply or reach out to 5 people/projects. | Career conversion. | Synthesis: Which role and artifact are you leading with? | Application tracker with artifact links. |
 
-## Quiz Bank Format
+## Checkpoint Format
 
 For each day, write answers in this format:
 
 ```markdown
-# Week N Day M Quiz
+# Week N Day M Checkpoint
+
+## Type
+Source-grounded / Artifact-grounded / Synthesis / Prior experience
+
+## Source or artifact
+Link, file path, or "my prior experience".
 
 ## Question
 ...
